@@ -1,119 +1,120 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { viewport } from '@utils/animations'
+import { viewport, ease, transition } from '@utils/animations'
 import { cn } from '@utils/cn'
 
 /* ═══════════════════════════════════════════════════════════════
-   CTA Banner — Final conversion section
-   — Full-width, premium gradient background
-   — Centered headline + subtext + dual CTA buttons
-   — Floating orb blobs for depth
-   — Subtle dot-grid overlay
-   — Fade + scale entrance animation
+   CTA Banner — Final premium polish
+   — Dark premium bg with refined orb system
+   — Coordinated stagger entrance
+   — Primary button: gradient fill with soft multi-color glow
+   — Trust bullets: staggered fade-in
+   — Top/bottom accent lines use logo gradient at low opacity
 ═══════════════════════════════════════════════════════════════ */
 
 const containerVariants = {
   hidden:  {},
-  visible: {
-    transition: { staggerChildren: 0.12, delayChildren: 0.1 },
-  },
+  visible: { transition: { staggerChildren: 0.11, delayChildren: 0.08 } },
 }
 
 const itemVariants = {
-  hidden:  { opacity: 0, y: 20 },
+  hidden:  { opacity: 0, y: 18, filter: 'blur(3px)' },
   visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, ease: [0.4, 0, 0.2, 1] },
+    opacity: 1, y: 0, filter: 'blur(0px)',
+    transition: { duration: 0.65, ease: ease.expo },
   },
 }
 
+const TRUST_ITEMS = [
+  '✓ Free initial consultation',
+  '✓ No contracts, no lock-in',
+  '✓ Reply within 24 hrs',
+]
+
 export default function CTA() {
   return (
-    <section className="relative py-24 md:py-32 overflow-hidden">
+    <section className="relative py-28 md:py-36 overflow-hidden" aria-label="Call to action">
 
-      {/* ── Gradient background ──────────────────────────── */}
+      {/* ── Solid dark base ─────────────────────────── */}
       <div
         className="absolute inset-0"
-        style={{
-          background: 'linear-gradient(135deg, #0F0F14 0%, #1a1a2e 40%, #16213e 70%, #0f1923 100%)',
-        }}
+        style={{ background: 'linear-gradient(160deg, #0D0D12 0%, #141420 50%, #0f1420 100%)' }}
         aria-hidden="true"
       />
 
-      {/* ── Coloured orb blobs ───────────────────────────── */}
+      {/* ── Ambient orbs ────────────────────────────── */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
 
-        {/* Top-left warm orb */}
+        {/* Top-left warm */}
         <motion.div
-          animate={{ scale: [1, 1.08, 1], opacity: [0.5, 0.7, 0.5] }}
-          transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute -top-32 -left-32 w-[500px] h-[500px] rounded-full"
+          animate={{ scale: [1, 1.08, 1], opacity: [0.55, 0.75, 0.55] }}
+          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+          className="absolute -top-40 -left-32 w-[540px] h-[540px]"
           style={{
-            background: 'radial-gradient(circle, rgba(196,98,45,0.22) 0%, transparent 65%)',
-            filter: 'blur(48px)',
+            background: 'radial-gradient(circle, rgba(196,98,45,0.22) 0%, transparent 62%)',
+            filter:     'blur(52px)',
           }}
         />
 
-        {/* Center-top cool orb */}
+        {/* Center-top blue */}
         <motion.div
-          animate={{ scale: [1, 1.06, 1], opacity: [0.4, 0.65, 0.4] }}
-          transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
-          className="absolute -top-24 left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full"
+          animate={{ scale: [1, 1.06, 1], opacity: [0.45, 0.65, 0.45] }}
+          transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
+          className="absolute -top-24 left-1/2 -translate-x-1/2 w-[640px] h-[420px]"
           style={{
-            background: 'radial-gradient(ellipse, rgba(74,127,212,0.25) 0%, transparent 65%)',
-            filter: 'blur(56px)',
+            background: 'radial-gradient(ellipse, rgba(74,127,212,0.26) 0%, transparent 62%)',
+            filter:     'blur(60px)',
           }}
         />
 
-        {/* Bottom-right purple orb */}
+        {/* Bottom-right purple */}
         <motion.div
-          animate={{ scale: [1, 1.10, 1], opacity: [0.4, 0.60, 0.4] }}
-          transition={{ duration: 13, repeat: Infinity, ease: 'easeInOut', delay: 4 }}
-          className="absolute -bottom-32 -right-32 w-[480px] h-[480px] rounded-full"
+          animate={{ scale: [1, 1.10, 1], opacity: [0.45, 0.62, 0.45] }}
+          transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut', delay: 4 }}
+          className="absolute -bottom-36 -right-28 w-[500px] h-[500px]"
           style={{
-            background: 'radial-gradient(circle, rgba(107,74,155,0.22) 0%, transparent 65%)',
-            filter: 'blur(48px)',
+            background: 'radial-gradient(circle, rgba(107,74,155,0.22) 0%, transparent 62%)',
+            filter:     'blur(52px)',
           }}
         />
 
-        {/* Bottom-left green accent */}
+        {/* Bottom-left green */}
         <motion.div
-          animate={{ scale: [1, 1.05, 1], opacity: [0.3, 0.5, 0.3] }}
-          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 1.5 }}
-          className="absolute bottom-0 left-1/4 w-[300px] h-[300px] rounded-full"
+          animate={{ scale: [1, 1.06, 1], opacity: [0.35, 0.52, 0.35] }}
+          transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut', delay: 1.5 }}
+          className="absolute bottom-0 left-1/4 w-[320px] h-[320px]"
           style={{
-            background: 'radial-gradient(circle, rgba(58,122,58,0.18) 0%, transparent 65%)',
-            filter: 'blur(40px)',
+            background: 'radial-gradient(circle, rgba(58,122,58,0.18) 0%, transparent 62%)',
+            filter:     'blur(44px)',
           }}
         />
       </div>
 
-      {/* ── Dot-grid overlay ─────────────────────────────── */}
+      {/* ── Dot grid ────────────────────────────────── */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 opacity-[0.035]"
+        className="absolute inset-0 opacity-[0.032]"
         style={{
           backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.9) 1px, transparent 1px)',
-          backgroundSize: '28px 28px',
+          backgroundSize:  '28px 28px',
         }}
       />
 
-      {/* ── Top edge gradient border ─────────────────────── */}
+      {/* ── Top edge gradient line ───────────────────── */}
       <div
         aria-hidden="true"
         className="absolute top-0 left-0 right-0 h-px"
-        style={{ background: 'var(--gradient-logo)', opacity: 0.4 }}
+        style={{ background: 'var(--gradient-logo)', opacity: 0.35 }}
       />
 
-      {/* ── Content ──────────────────────────────────────── */}
+      {/* ── Content ──────────────────────────────────── */}
       <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-6 md:px-10 lg:px-16 xl:px-24">
         <motion.div
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={viewport.default}
-          className="flex flex-col items-center text-center max-w-3xl mx-auto"
+          className="flex flex-col items-center text-center max-w-[46rem] mx-auto"
         >
 
           {/* Eyebrow */}
@@ -122,11 +123,15 @@ export default function CTA() {
               'inline-flex items-center gap-2',
               'px-4 py-1.5 rounded-full',
               'text-xs font-mono font-medium tracking-widest uppercase',
-              'bg-white/10 border border-white/15',
-              'text-white/70',
-            )}>
-              <span
-                className="w-1.5 h-1.5 rounded-full animate-pulse-soft"
+              'bg-white/8 border border-white/14',
+              'text-white/60',
+            )}
+              style={{ backgroundColor: 'rgba(255,255,255,0.08)' }}
+            >
+              <motion.span
+                animate={{ opacity: [0.4, 1, 0.4] }}
+                transition={{ duration: 2.2, repeat: Infinity }}
+                className="w-1.5 h-1.5 rounded-full"
                 style={{ background: 'var(--gradient-logo)' }}
               />
               Let's build together
@@ -138,21 +143,19 @@ export default function CTA() {
             variants={itemVariants}
             className={cn(
               'font-display font-bold text-white',
-              'text-4xl sm:text-5xl md:text-6xl lg:text-[3.5rem]',
-              'leading-[1.04] tracking-[-0.038em]',
+              'text-[clamp(2.4rem,6vw,4rem)]',
+              'leading-[1.05] tracking-[-0.040em]',
               'mb-5',
             )}
           >
             Have an idea?{' '}
             <br className="hidden sm:block" />
-            <span
-              style={{
-                background: 'var(--gradient-logo)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-              }}
-            >
+            <span style={{
+              background:           'var(--gradient-logo)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor:  'transparent',
+              backgroundClip:       'text',
+            }}>
               Let's build it.
             </span>
           </motion.h2>
@@ -160,43 +163,50 @@ export default function CTA() {
           {/* Subtext */}
           <motion.p
             variants={itemVariants}
-            className="text-white/60 text-base sm:text-lg leading-relaxed max-w-md mb-10 font-body"
+            className="text-white/55 text-base sm:text-lg leading-[1.72] max-w-[36rem] mb-10 font-body"
           >
             Whether it's a product, a platform, or a proof of concept — we'll take
             it from napkin sketch to polished, production-ready reality.
           </motion.p>
 
-          {/* CTAs */}
+          {/* CTA buttons */}
           <motion.div
             variants={itemVariants}
-            className="flex flex-col sm:flex-row items-center gap-3 mb-12"
+            className="flex flex-col sm:flex-row items-center gap-3 mb-10"
           >
-            {/* Primary */}
+            {/* Primary — gradient fill + multi-color glow */}
             <Link to="/contact">
               <motion.span
-                whileHover={{ scale: 1.04 }}
+                whileHover={{ scale: 1.04, y: -2 }}
                 whileTap={{ scale: 0.97 }}
-                transition={{ type: 'spring', stiffness: 500, damping: 28 }}
+                transition={transition.spring}
                 className={cn(
                   'inline-flex items-center gap-2',
-                  'px-7 py-3.5 rounded-xl',
+                  'px-8 py-4 rounded-xl',
                   'font-body font-semibold text-sm text-white',
                   'cursor-pointer select-none',
-                  'shadow-glow-sm hover:shadow-glow-md',
-                  'transition-shadow duration-300',
+                  'transition-shadow duration-[260ms]',
                 )}
                 style={{
+                  display:    'inline-flex',
                   background: 'var(--gradient-logo)',
-                  display: 'inline-flex',
+                  boxShadow:  '0 0 20px rgba(193,59,42,0.20), 0 0 36px rgba(74,127,212,0.16), 0 4px 16px rgba(13,13,18,0.24)',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.boxShadow =
+                    '0 0 28px rgba(193,59,42,0.28), 0 0 52px rgba(74,127,212,0.22), 0 8px 32px rgba(13,13,18,0.32)'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.boxShadow =
+                    '0 0 20px rgba(193,59,42,0.20), 0 0 36px rgba(74,127,212,0.16), 0 4px 16px rgba(13,13,18,0.24)'
                 }}
               >
                 Get in Touch
-                <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
-                  <path d="M2 6.5h9M7.5 2.5l4 4-4 4"
-                    stroke="currentColor" strokeWidth="1.5"
-                    strokeLinecap="round" strokeLinejoin="round"
-                  />
-                </svg>
+                <motion.span
+                  animate={{ x: [0, 3, 0] }}
+                  transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+                  aria-hidden="true"
+                >→</motion.span>
               </motion.span>
             </Link>
 
@@ -205,49 +215,48 @@ export default function CTA() {
               <motion.span
                 whileHover={{ scale: 1.02, backgroundColor: 'rgba(255,255,255,0.12)' }}
                 whileTap={{ scale: 0.97 }}
-                transition={{ type: 'spring', stiffness: 500, damping: 28 }}
+                transition={transition.spring}
                 className={cn(
                   'inline-flex items-center gap-2',
-                  'px-7 py-3.5 rounded-xl',
-                  'font-body font-medium text-sm text-white/80',
-                  'bg-white/8 border border-white/15',
+                  'px-8 py-4 rounded-xl',
+                  'font-body font-medium text-sm text-white/65',
+                  'border border-white/14',
                   'hover:text-white',
-                  'transition-colors duration-200',
-                  'cursor-pointer select-none',
+                  'transition-colors duration-[200ms] cursor-pointer select-none',
                 )}
-                style={{ display: 'inline-flex', backgroundColor: 'rgba(255,255,255,0.08)' }}
+                style={{ display: 'inline-flex', backgroundColor: 'rgba(255,255,255,0.07)' }}
               >
                 See Our Work
               </motion.span>
             </Link>
           </motion.div>
 
-          {/* Bottom trust line */}
+          {/* Trust bullets */}
           <motion.div
             variants={itemVariants}
-            className="flex flex-col sm:flex-row items-center gap-2 sm:gap-5"
+            className="flex flex-col sm:flex-row items-center gap-3 sm:gap-7"
           >
-            {[
-              '✓ Free initial consultation',
-              '✓ No contracts, no lock-in',
-              '✓ Response within 24 hrs',
-            ].map((item) => (
-              <span
+            {TRUST_ITEMS.map((item, i) => (
+              <motion.span
                 key={item}
-                className="text-xs font-mono text-white/40 tracking-wide"
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={viewport.default}
+                transition={{ delay: 0.6 + i * 0.10, duration: 0.45 }}
+                className="text-xs font-mono text-white/35 tracking-wide"
               >
                 {item}
-              </span>
+              </motion.span>
             ))}
           </motion.div>
         </motion.div>
       </div>
 
-      {/* ── Bottom edge gradient border ───────────────────── */}
+      {/* ── Bottom edge line ─────────────────────────── */}
       <div
         aria-hidden="true"
         className="absolute bottom-0 left-0 right-0 h-px"
-        style={{ background: 'var(--gradient-logo)', opacity: 0.25 }}
+        style={{ background: 'var(--gradient-logo)', opacity: 0.20 }}
       />
     </section>
   )

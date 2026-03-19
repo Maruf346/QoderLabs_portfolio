@@ -97,7 +97,7 @@ export default function Card({
   const classes = cn(
     BASE,
     variants[variant]           ?? variants.default,
-    hover && hoverStyles[variant] ?? '',
+    hover && hoverStyles[variant] ?? ''
     paddings[padding]           ?? paddings.md,
     onClick && 'cursor-pointer',
     className,

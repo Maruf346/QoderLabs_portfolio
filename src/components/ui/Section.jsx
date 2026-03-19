@@ -1,54 +1,43 @@
 import { motion } from 'framer-motion'
+import { timing, ease, viewport as defaultViewport } from '@utils/animations'
 import { cn } from '@utils/cn'
 import Container from './Container'
 
-/**
- * Section
- *
- * Standard page section with consistent vertical rhythm.
- * Optional eyebrow label, title, subtitle, and centered/left alignment.
- *
- * Props:
- *   eyebrow   — small mono label above the title (e.g. "Our Services")
- *   title     — section heading (string or JSX)
- *   subtitle  — body copy below the title
- *   align     — 'left' | 'center' (default: 'center')
- *   size      — Container size passthrough
- *   bg        — background variant: 'default' | 'subtle' | 'soft-gradient'
- *   noPadding — removes default vertical padding
- *   animate   — enables scroll-triggered fade-up (default: true)
- *
- * Usage:
- *   <Section eyebrow="What we do" title="Services that scale" subtitle="...">
- *     <YourContent />
- *   </Section>
- */
+/* ═══════════════════════════════════════════════════════════════
+   Section — Final polish
+   — Uses coordinated timing system from animations.js
+   — Header entrance: stagger eyebrow → title → subtitle
+   — All durations pulled from timing constants
+   — bg variants include new 'white' + 'dark' options
+   — StaggerGrid / StaggerItem re-exported for convenience
+═══════════════════════════════════════════════════════════════ */
 
 const bgVariants = {
-  default:        'bg-surface-50',
-  subtle:         'bg-surface-100',
-  'soft-gradient':'bg-gradient-soft',
+  default:        'bg-[#F8F8FA]',
+  subtle:         'bg-[#F2F2F6]',
   white:          'bg-white',
+  'soft-gradient':'bg-brand-soft',
+  dark:           'bg-[#0D0D12]',
   none:           '',
 }
 
-// Framer Motion variants for the header block
-const headerVariants = {
-  hidden:  { opacity: 0, y: 24 },
+/* Coordinated section header variants */
+const headerContainerVariants = {
+  hidden:  {},
   visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, ease: [0.4, 0, 0.2, 1] },
+    transition: {
+      staggerChildren: timing.childSlow,
+      delayChildren:   0.04,
+    },
   },
 }
 
-const childVariants = {
-  hidden:  { opacity: 0, y: 16 },
-  visible: (i = 0) => ({
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.5, delay: i * 0.08, ease: [0.4, 0, 0.2, 1] },
-  }),
+const headerItemVariants = {
+  hidden:  { opacity: 0, y: 20, filter: 'blur(3px)' },
+  visible: {
+    opacity: 1, y: 0, filter: 'blur(0px)',
+    transition: { duration: timing.sectionDuration, ease: ease.expo },
+  },
 }
 
 export default function Section({
@@ -56,25 +45,35 @@ export default function Section({
   eyebrow,
   title,
   subtitle,
-  align     = 'center',
-  size      = 'xl',
-  bg        = 'default',
-  noPadding = false,
-  animate   = true,
-  className = '',
-  innerClassName = '',
-  as: Tag   = 'section',
+  align           = 'center',
+  size            = 'xl',
+  bg              = 'default',
+  noPadding       = false,
+  animate         = true,
+  className       = '',
+  innerClassName  = '',
+  eyebrowColor    = 'default',
+  as: Tag         = 'section',
   ...props
 }) {
-  const hasHeader  = eyebrow || title || subtitle
-  const isCenter   = align === 'center'
-  const MotionTag  = animate ? motion[Tag] ?? motion.section : Tag
+  const hasHeader = eyebrow || title || subtitle
+  const isCenter  = align === 'center'
+
+  const eyebrowColors = {
+    default: 'text-[#94949E]',
+    blue:    'text-brand-blue',
+    green:   'text-brand-green',
+    red:     'text-brand-red',
+    purple:  'text-brand-purple',
+  }
+
+  const MotionTag = animate ? motion[Tag] ?? motion.section : Tag
 
   const motionProps = animate
     ? {
-        initial:    'hidden',
-        whileInView:'visible',
-        viewport:   { once: true, margin: '-80px' },
+        initial:     'hidden',
+        whileInView: 'visible',
+        viewport:    defaultViewport.default,
       }
     : {}
 
@@ -83,29 +82,40 @@ export default function Section({
       className={cn(
         !noPadding && 'py-20 md:py-28 lg:py-32',
         bgVariants[bg] ?? bgVariants.default,
-        className
+        className,
       )}
-      {...motionProps}
+      {...(animate ? motionProps : {})}
       {...props}
     >
       <Container size={size} className={innerClassName}>
 
-        {/* ── Section header ───────────────────────────────── */}
+        {/* ── Section header ───────────────────────── */}
         {hasHeader && (
           <motion.div
-            variants={animate ? headerVariants : undefined}
+            variants={animate ? headerContainerVariants : undefined}
+            initial={animate ? 'hidden' : undefined}
+            whileInView={animate ? 'visible' : undefined}
+            viewport={animate ? defaultViewport.default : undefined}
             className={cn(
               'mb-12 md:mb-16',
-              isCenter ? 'text-center mx-auto max-w-2xl' : 'max-w-xl'
+              isCenter ? 'text-center mx-auto max-w-2xl' : 'max-w-xl',
             )}
           >
             {/* Eyebrow */}
             {eyebrow && (
               <motion.p
-                variants={animate ? childVariants : undefined}
-                custom={0}
-                className="eyebrow mb-3"
+                variants={animate ? headerItemVariants : undefined}
+                className={cn(
+                  'inline-flex items-center gap-2',
+                  'font-mono text-xs font-medium uppercase tracking-[0.15em]',
+                  'mb-3',
+                  eyebrowColors[eyebrowColor] ?? eyebrowColors.default,
+                )}
               >
+                <span
+                  className="w-1.5 h-1.5 rounded-full bg-current opacity-60"
+                  aria-hidden="true"
+                />
                 {eyebrow}
               </motion.p>
             )}
@@ -113,9 +123,13 @@ export default function Section({
             {/* Title */}
             {title && (
               <motion.h2
-                variants={animate ? childVariants : undefined}
-                custom={1}
-                className="font-display font-bold text-ink mb-4"
+                variants={animate ? headerItemVariants : undefined}
+                className={cn(
+                  'font-display font-bold text-[#0D0D12]',
+                  'text-3xl sm:text-4xl md:text-[2.75rem]',
+                  'leading-[1.09] tracking-[-0.032em]',
+                  'mb-4',
+                )}
               >
                 {title}
               </motion.h2>
@@ -124,11 +138,10 @@ export default function Section({
             {/* Subtitle */}
             {subtitle && (
               <motion.p
-                variants={animate ? childVariants : undefined}
-                custom={2}
+                variants={animate ? headerItemVariants : undefined}
                 className={cn(
-                  'body-lg',
-                  isCenter && 'mx-auto'
+                  'font-body text-base md:text-lg text-[#56566E] leading-[1.72]',
+                  isCenter && 'mx-auto',
                 )}
               >
                 {subtitle}
@@ -137,51 +150,39 @@ export default function Section({
           </motion.div>
         )}
 
-        {/* ── Section body ─────────────────────────────────── */}
+        {/* ── Children ─────────────────────────────── */}
         {children}
       </Container>
     </MotionTag>
   )
 }
 
-/* ─── Stagger container for child elements ───────────────────── */
-const staggerVariants = {
+/* ─── StaggerGrid ────────────────────────────────────────────── */
+const staggerGridVariants = {
   hidden:  {},
   visible: {
     transition: {
-      staggerChildren: 0.1,
-      delayChildren:   0.1,
+      staggerChildren: timing.childDelay,
+      delayChildren:   0.08,
     },
   },
 }
 
 const staggerItemVariants = {
-  hidden:  { opacity: 0, y: 20 },
+  hidden:  { opacity: 0, y: 18, filter: 'blur(2px)' },
   visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.5, ease: [0.4, 0, 0.2, 1] },
+    opacity: 1, y: 0, filter: 'blur(0px)',
+    transition: { duration: 0.52, ease: ease.expo },
   },
 }
 
-/**
- * StaggerGrid
- * Wraps children in a stagger animation container.
- * Use inside a Section to animate grid/list children one by one.
- *
- * Usage:
- *   <StaggerGrid className="grid grid-cols-3 gap-6">
- *     <Card />
- *     <Card />
- *   </StaggerGrid>
- */
 export function StaggerGrid({ children, className = '', ...props }) {
   return (
     <motion.div
-      variants={staggerVariants}
+      variants={staggerGridVariants}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, margin: '-60px' }}
+      viewport={defaultViewport.default}
       className={className}
       {...props}
     >
@@ -190,17 +191,9 @@ export function StaggerGrid({ children, className = '', ...props }) {
   )
 }
 
-/**
- * StaggerItem
- * Must be a direct child of StaggerGrid.
- */
 export function StaggerItem({ children, className = '', ...props }) {
   return (
-    <motion.div
-      variants={staggerItemVariants}
-      className={className}
-      {...props}
-    >
+    <motion.div variants={staggerItemVariants} className={className} {...props}>
       {children}
     </motion.div>
   )
