@@ -156,11 +156,11 @@ export default function Hero() {
           variants={heroContainer}
           initial="hidden"
           animate="visible"
-          className="flex flex-col items-center text-center max-w-[52rem] mx-auto"
+          className="flex flex-col items-center text-center max-w-[52rem] mx-auto pt-20"
         >
 
           {/* Eyebrow pill */}
-          <motion.div variants={heroItem} className="mb-8">
+          {/* <motion.div variants={heroItem} className="mb-98">
             <span className={cn(
               'inline-flex items-center gap-2',
               'px-4 py-1.5 rounded-full',
@@ -177,7 +177,7 @@ export default function Hero() {
               />
               Premium Software Agency
             </span>
-          </motion.div>
+          </motion.div> */}
 
           {/* Headline */}
           <motion.h1

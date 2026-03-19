@@ -95,8 +95,8 @@ export default function Footer() {
               <motion.img
                 src="/logo.png"
                 alt="QoderLabs logo"
-                width={34}
-                height={34}
+                width={84}
+                height={84}
                 className="object-contain no-select"
                 draggable={false}
                 whileHover={{ rotate: [0, -5, 5, 0] }}
@@ -105,7 +105,7 @@ export default function Footer() {
               <img
                 src="/name.png"
                 alt="QoderLabs"
-                className="h-[19px] w-auto object-contain no-select"
+                className="h-[85px] w-auto object-contain no-select"
                 draggable={false}
               />
             </Link>

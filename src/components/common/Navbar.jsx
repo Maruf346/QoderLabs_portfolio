@@ -79,8 +79,8 @@ export default function Navbar() {
               <motion.img
                 src="/logo.png"
                 alt="QoderLabs"
-                width={34}
-                height={34}
+                width={84}
+                height={84}
                 className="object-contain no-select"
                 draggable={false}
                 whileHover={{ rotate: [0, -7, 7, -3, 0], scale: 1.04 }}
@@ -89,7 +89,7 @@ export default function Navbar() {
               <img
                 src="/name.png"
                 alt="QoderLabs wordmark"
-                className="hidden sm:block h-[19px] w-auto object-contain no-select opacity-90 group-hover:opacity-100 transition-opacity duration-200"
+                className="hidden sm:block h-[65px] w-auto object-contain no-select opacity-90 group-hover:opacity-100 transition-opacity duration-200"
                 draggable={false}
               />
             </Link>
