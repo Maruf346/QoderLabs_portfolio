@@ -1,53 +1,43 @@
 import { motion } from 'framer-motion'
 import {
-  fadeIn,
-  fadeInScale,
-  slideUp,
-  slideUpSoft,
-  slideDown,
-  slideInLeft,
-  slideInRight,
-  staggerContainer,
-  staggerFast,
-  staggerSlow,
+  fadeIn, fadeInScale, fadeInUp, fadeInDown,
+  slideUp, slideUpSoft, slideDown,
+  slideInLeft, slideInRight,
+  staggerContainer, staggerFast, staggerSlow,
   viewport as defaultViewport,
+  ease,
 } from '@utils/animations'
 import { cn } from '@utils/cn'
 
-/**
- * MotionWrapper
- *
- * A flexible wrapper that applies animation presets to any content.
- * Powered by Framer Motion whileInView for scroll-triggered reveals.
- *
- * Presets:
- *   fadeIn | fadeInScale | slideUp | slideUpSoft | slideDown
- *   slideInLeft | slideInRight | stagger | staggerFast | staggerSlow
- *
- * Props:
- *   preset      — animation preset name (default: 'slideUp')
- *   delay       — delay in seconds (default: 0)
- *   duration    — override duration in seconds
- *   viewport    — 'default' | 'early' | 'late' (default: 'default')
- *   triggerOnce — only animate once (default: true)
- *   as          — HTML element to render (default: 'div')
- *   animate     — if false, renders static (default: true)
- *   className   — additional classes
- *
- * Usage:
- *   <MotionWrapper preset="slideUp" delay={0.1}>
- *     <MyComponent />
- *   </MotionWrapper>
- *
- *   <MotionWrapper preset="stagger" as="ul">
- *     <MotionItem><li>Item 1</li></MotionItem>
- *     <MotionItem><li>Item 2</li></MotionItem>
- *   </MotionWrapper>
- */
+/* ═══════════════════════════════════════════════════════════════
+   MotionWrapper — Upgraded flexible animation wrapper
+
+   Props:
+     preset      — animation name (see PRESETS below)
+     delay       — seconds to delay entrance (default 0)
+     duration    — override duration in seconds
+     viewportKey — 'default' | 'early' | 'late'
+     once        — only animate once (default true)
+     as          — HTML element tag (default 'div')
+     animate     — false = render static, no motion (default true)
+     className / style — passed through
+
+   Usage:
+     <MotionWrapper preset="slideUp" delay={0.15}>
+       <Card />
+     </MotionWrapper>
+
+     <MotionWrapper preset="stagger" as="ul">
+       <MotionItem as="li">Item 1</MotionItem>
+       <MotionItem as="li">Item 2</MotionItem>
+     </MotionWrapper>
+═══════════════════════════════════════════════════════════════ */
 
 const PRESETS = {
   fadeIn,
   fadeInScale,
+  fadeInUp,
+  fadeInDown,
   slideUp,
   slideUpSoft,
   slideDown,
@@ -58,7 +48,7 @@ const PRESETS = {
   staggerSlow,
 }
 
-const VIEWPORT = {
+const VIEWPORT_MAP = {
   default: defaultViewport.default,
   early:   defaultViewport.early,
   late:    defaultViewport.late,
@@ -70,41 +60,36 @@ export default function MotionWrapper({
   delay       = 0,
   duration,
   viewportKey = 'default',
-  triggerOnce = true,
+  once        = true,
   as          = 'div',
   animate     = true,
   className   = '',
   style       = {},
   ...props
 }) {
-  // Render static if animations disabled
+  // Static fallback when animations disabled (reduced motion, etc.)
   if (!animate) {
     const Tag = as
     return <Tag className={className} style={style} {...props}>{children}</Tag>
   }
 
-  const variants = PRESETS[preset] ?? PRESETS.slideUp
-  const vp = { ...(VIEWPORT[viewportKey] ?? VIEWPORT.default), once: triggerOnce }
+  const base = PRESETS[preset] ?? PRESETS.slideUp
+  const vp   = { ...(VIEWPORT_MAP[viewportKey] ?? VIEWPORT_MAP.default), once }
 
-  // Build transition override if delay or duration provided
-  const customTransition = (delay || duration)
+  // Merge delay/duration overrides into the visible transition
+  const finalVariants = (delay || duration)
     ? {
-        ...(variants.visible?.transition ?? {}),
-        ...(delay    ? { delay }    : {}),
-        ...(duration ? { duration } : {}),
-      }
-    : undefined
-
-  // If custom transition, merge into visible variant
-  const finalVariants = customTransition
-    ? {
-        ...variants,
+        ...base,
         visible: {
-          ...variants.visible,
-          transition: customTransition,
+          ...base.visible,
+          transition: {
+            ...(base.visible?.transition ?? {}),
+            ...(delay    ? { delay }    : {}),
+            ...(duration ? { duration } : {}),
+          },
         },
       }
-    : variants
+    : base
 
   const MotionTag = motion[as] ?? motion.div
 
@@ -126,16 +111,8 @@ export default function MotionWrapper({
 
 /* ─── MotionItem ─────────────────────────────────────────────── */
 /**
- * MotionItem
- *
- * Use as direct children of a MotionWrapper with preset="stagger".
+ * Direct child of a MotionWrapper with preset="stagger*".
  * Inherits parent stagger timing automatically.
- *
- * Usage:
- *   <MotionWrapper preset="stagger" as="ul">
- *     <MotionItem as="li">First item</MotionItem>
- *     <MotionItem as="li">Second item</MotionItem>
- *   </MotionWrapper>
  */
 export function MotionItem({
   children,
@@ -144,51 +121,27 @@ export function MotionItem({
   className = '',
   ...props
 }) {
-  const variants = PRESETS[preset] ?? PRESETS.slideUpSoft
+  const variants  = PRESETS[preset] ?? PRESETS.slideUpSoft
   const MotionTag = motion[as] ?? motion.div
-
   return (
-    <MotionTag
-      variants={variants}
-      className={className}
-      {...props}
-    >
+    <MotionTag variants={variants} className={className} {...props}>
       {children}
     </MotionTag>
   )
 }
 
 /* ─── MotionSection ──────────────────────────────────────────── */
-/**
- * MotionSection
- *
- * A <section> wrapper with built-in scroll-triggered animation.
- * Convenience alias for <MotionWrapper as="section">.
- */
-export function MotionSection({
-  children,
-  preset    = 'fadeIn',
-  className = '',
-  ...props
-}) {
+export function MotionSection({ children, preset = 'fadeIn', className = '', ...props }) {
   return (
-    <MotionWrapper
-      as="section"
-      preset={preset}
-      className={className}
-      {...props}
-    >
+    <MotionWrapper as="section" preset={preset} className={className} {...props}>
       {children}
     </MotionWrapper>
   )
 }
 
-/* ─── MotionHeading ──────────────────────────────────────────── */
+/* ─── MotionHeading — word-by-word stagger ───────────────────── */
 /**
- * MotionHeading
- *
- * Animated heading with word-by-word stagger reveal.
- * Splits text into words and animates each one.
+ * Animates each word of a heading individually for a premium reveal.
  *
  * Usage:
  *   <MotionHeading as="h1" className="display-xl">
@@ -197,18 +150,18 @@ export function MotionSection({
  */
 export function MotionHeading({
   children,
-  as          = 'h2',
-  className   = '',
-  staggerDelay = 0.06,
+  as:           Tag          = 'h2',
+  className                  = '',
+  wordDelay                  = 0.055,
+  initialDelay               = 0.05,
   ...props
 }) {
-  const Tag = as
   const text = typeof children === 'string' ? children : null
 
+  // Fallback: whole-element slide if not a plain string
   if (!text) {
-    // Fallback: no split, just slide up the whole element
     return (
-      <MotionWrapper as={as} preset="slideUp" className={className} {...props}>
+      <MotionWrapper as={Tag} preset="slideUp" className={className} {...props}>
         {children}
       </MotionWrapper>
     )
@@ -224,19 +177,20 @@ export function MotionHeading({
       className={cn('overflow-hidden', className)}
       {...props}
     >
-      <Tag className="flex flex-wrap gap-x-[0.28em] gap-y-1">
+      <Tag className="flex flex-wrap gap-x-[0.25em] gap-y-1">
         {words.map((word, i) => (
           <motion.span
             key={i}
             variants={{
-              hidden:  { opacity: 0, y: '60%' },
+              hidden:  { opacity: 0, y: '55%', filter: 'blur(4px)' },
               visible: {
                 opacity: 1,
-                y: '0%',
+                y:       '0%',
+                filter:  'blur(0px)',
                 transition: {
-                  duration: 0.5,
-                  delay: i * staggerDelay,
-                  ease: [0.4, 0, 0.2, 1],
+                  duration: 0.55,
+                  delay:    initialDelay + i * wordDelay,
+                  ease:     ease.expo,
                 },
               },
             }}

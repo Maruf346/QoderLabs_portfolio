@@ -3,24 +3,23 @@
 @tailwind utilities;
 
 /* ═══════════════════════════════════════════════════════════════
-   CSS CUSTOM PROPERTIES — Single source of truth
-   All values mirror tailwind.config.js for use in plain CSS
+   CSS CUSTOM PROPERTIES
 ═══════════════════════════════════════════════════════════════ */
 :root {
-  /* Surfaces */
-  --color-bg:         #FAFAFA;
-  --color-surface-50: #FAFAFA;
-  --color-surface-100:#F4F4F6;
-  --color-surface-200:#EAEAEE;
-  --color-surface-300:#D8D8E0;
-  --color-border:     #EAEAEE;
+  /* Surfaces — very slightly warm-neutral, not pure white */
+  --color-bg:          #F8F8FA;
+  --color-surface-50:  #F8F8FA;
+  --color-surface-100: #F2F2F6;
+  --color-surface-200: #E8E8EE;
+  --color-surface-300: #D6D6E0;
+  --color-border:      #E8E8EE;
 
   /* Ink */
-  --color-ink:        #0F0F14;
-  --color-ink-muted:  #5A5A72;
-  --color-ink-light:  #9898AE;
+  --color-ink:         #0D0D12;
+  --color-ink-muted:   #56566E;
+  --color-ink-light:   #94949E;
 
-  /* Brand — extracted from logo/name assets */
+  /* Brand — extracted from logo */
   --brand-red:    #C13B2A;
   --brand-orange: #C4622D;
   --brand-amber:  #B8832A;
@@ -32,62 +31,41 @@
   --brand-pink:   #C45A7A;
 
   /* Gradients */
-  --gradient-name: linear-gradient(
-    90deg,
-    #3A7A3A 0%,
-    #7A8B2E 25%,
-    #B8832A 50%,
-    #C4622D 75%,
-    #C13B2A 100%
-  );
+  --gradient-name: linear-gradient(90deg,  #3A7A3A 0%, #7A8B2E 25%, #B8832A 50%, #C4622D 75%, #C13B2A 100%);
+  --gradient-logo: linear-gradient(135deg, #C13B2A 0%, #C4622D 15%, #B8832A 30%, #7A8B2E 45%, #3A7A3A 55%, #2A6B5A 65%, #4A7FD4 80%, #6B4A9B 100%);
+  --gradient-soft: linear-gradient(135deg, rgba(193,59,42,0.06) 0%, rgba(184,131,42,0.04) 35%, rgba(58,122,58,0.05) 55%, rgba(74,127,212,0.06) 80%, rgba(107,74,155,0.05) 100%);
 
-  --gradient-logo: linear-gradient(
-    135deg,
-    #C13B2A  0%,
-    #C4622D 15%,
-    #B8832A 30%,
-    #7A8B2E 45%,
-    #3A7A3A 55%,
-    #2A6B5A 65%,
-    #4A7FD4 80%,
-    #6B4A9B 100%
-  );
+  /* Shadows — refined, layered */
+  --shadow-xs:         0 1px 2px rgba(13,13,18,0.05);
+  --shadow-card:       0 1px 3px rgba(13,13,18,0.05), 0 4px 16px rgba(13,13,18,0.05);
+  --shadow-card-hover: 0 2px 8px rgba(13,13,18,0.06), 0 12px 40px rgba(13,13,18,0.09);
+  --shadow-lift:       0 2px 8px rgba(13,13,18,0.08), 0 4px 16px rgba(13,13,18,0.06);
+  --shadow-lift-hover: 0 4px 16px rgba(13,13,18,0.10), 0 16px 48px rgba(13,13,18,0.10);
+  --shadow-glow-sm:    0 0 20px rgba(74,127,212,0.16);
+  --shadow-glow-md:    0 0 36px rgba(74,127,212,0.22);
 
-  --gradient-soft: linear-gradient(
-    135deg,
-    rgba(193,59,42,0.07)  0%,
-    rgba(184,131,42,0.05) 35%,
-    rgba(58,122,58,0.06)  55%,
-    rgba(74,127,212,0.07) 80%,
-    rgba(107,74,155,0.06) 100%
-  );
+  /* Radius */
+  --radius-sm:  0.375rem;
+  --radius-md:  0.625rem;
+  --radius-lg:  0.875rem;
+  --radius-xl:  1.125rem;
+  --radius-2xl: 1.5rem;
+  --radius-3xl: 2rem;
 
-  --gradient-hero-glow: radial-gradient(
-    ellipse 90% 55% at 50% -5%,
-    rgba(74,127,212,0.13) 0%,
-    transparent 70%
-  );
-
-  /* Shadows */
-  --shadow-card:       0 2px 24px rgba(15,15,20,0.06), 0 1px 4px rgba(15,15,20,0.04);
-  --shadow-card-hover: 0 8px 48px rgba(15,15,20,0.10), 0 2px 8px rgba(15,15,20,0.06);
-  --shadow-lift:       0 4px 16px rgba(15,15,20,0.10), 0 1px 4px rgba(15,15,20,0.06);
-  --shadow-glow-blue:  0 0 32px rgba(74,127,212,0.22);
-  --shadow-glow-green: 0 0 28px rgba(58,122,58,0.20);
-  --shadow-glow-warm:  0 0 28px rgba(196,98,45,0.18);
-
-  /* Radius system */
-  --radius-sm:  0.25rem;   /* 4px  */
-  --radius-md:  0.5rem;    /* 8px  */
-  --radius-lg:  0.75rem;   /* 12px */
-  --radius-xl:  1rem;      /* 16px */
-  --radius-2xl: 1.5rem;    /* 24px */
-  --radius-3xl: 2rem;      /* 32px */
+  /* Easing — premium cubic-bezier curves */
+  --ease-smooth:  cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out:     cubic-bezier(0, 0, 0.2, 1);
+  --ease-in:      cubic-bezier(0.4, 0, 1, 1);
+  --ease-spring:  cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-snappy:  cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-expo:    cubic-bezier(0.16, 1, 0.3, 1);
 
   /* Transitions */
-  --ease-base:   200ms cubic-bezier(0.4, 0, 0.2, 1);
-  --ease-spring: 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
-  --ease-smooth: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  --t-fast:    150ms var(--ease-smooth);
+  --t-base:    220ms var(--ease-smooth);
+  --t-slow:    380ms var(--ease-smooth);
+  --t-spring:  420ms var(--ease-spring);
+  --t-expo:    600ms var(--ease-expo);
 
   /* Typography */
   --font-display: 'Syne',    sans-serif;
@@ -96,70 +74,66 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   BASE LAYER — Reset & Defaults
+   BASE LAYER
 ═══════════════════════════════════════════════════════════════ */
 @layer base {
 
-  /* Box model */
   *, *::before, *::after {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
   }
 
-  /* Root */
   html {
     scroll-behavior: smooth;
+    scroll-padding-top: 80px;
     text-size-adjust: 100%;
     -webkit-text-size-adjust: 100%;
+    /* Prevent layout shift from scrollbar */
+    scrollbar-gutter: stable;
   }
 
-  /* Body */
   body {
-    @apply font-body text-ink bg-surface-50;
+    @apply font-body bg-[#F8F8FA] text-[#0D0D12];
     line-height: 1.65;
-    letter-spacing: -0.012em;
-    /* Premium font rendering */
-    -webkit-font-smoothing: antialiased;
+    letter-spacing: -0.013em;
+    /* Premium font rendering stack */
+    -webkit-font-smoothing:  antialiased;
     -moz-osx-font-smoothing: grayscale;
-    font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1;
+    font-feature-settings:   'kern' 1, 'liga' 1, 'calt' 1, 'ss01' 1;
     text-rendering: optimizeLegibility;
+    /* Prevent content flash */
+    overflow-x: hidden;
   }
 
   /* Headings */
   h1, h2, h3, h4, h5, h6 {
     @apply font-display;
+    font-feature-settings: 'ss01' 1, 'ss02' 1;
     line-height: 1.12;
     letter-spacing: -0.035em;
-    font-feature-settings: 'ss01' 1;
   }
 
   h1 { @apply text-5xl md:text-6xl lg:text-7xl font-bold; }
-  h2 { @apply text-3xl md:text-4xl lg:text-5xl font-bold; }
+  h2 { @apply text-3xl md:text-4xl lg:text-[2.75rem] font-bold; }
   h3 { @apply text-2xl md:text-3xl font-semibold; }
   h4 { @apply text-xl md:text-2xl font-semibold; }
   h5 { @apply text-lg font-medium; }
   h6 { @apply text-base font-medium; }
 
-  /* Body copy */
   p {
-    @apply text-ink-muted leading-relaxed;
+    @apply font-body text-[#56566E] leading-relaxed;
     max-width: 68ch;
   }
 
-  /* Links */
   a {
     color: inherit;
     text-decoration: none;
+    transition: color var(--t-fast);
   }
 
-  /* Images */
-  img, video {
-    display: block;
-    max-width: 100%;
-  }
+  img, video, svg { display: block; max-width: 100%; }
 
-  /* Buttons */
   button {
     cursor: pointer;
     font-family: inherit;
@@ -167,244 +141,174 @@
     background: none;
   }
 
-  /* Focus visible — accessible but clean */
+  /* Focus — accessible but refined */
   :focus-visible {
     outline: 2px solid var(--brand-blue);
     outline-offset: 3px;
     border-radius: var(--radius-md);
   }
 
-  /* Text selection — brand tinted */
+  /* Selection — brand tinted */
   ::selection {
-    background: rgba(74, 127, 212, 0.18);
+    background: rgba(74, 127, 212, 0.16);
     color: var(--color-ink);
   }
   ::-moz-selection {
-    background: rgba(74, 127, 212, 0.18);
+    background: rgba(74, 127, 212, 0.16);
     color: var(--color-ink);
   }
 
-  /* ── Custom scrollbar ────────────────────────────────────── */
-  ::-webkit-scrollbar {
-    width: 5px;
-    height: 5px;
-  }
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
+  /* ── Scrollbar — refined thin track ─────────────────────── */
+  ::-webkit-scrollbar       { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb {
-    background: var(--color-surface-300);
+    background:    var(--color-surface-300);
     border-radius: 9999px;
-    transition: background var(--ease-base);
+    transition:    background var(--t-base);
   }
-  ::-webkit-scrollbar-thumb:hover {
-    background: var(--color-ink-light);
-  }
-  ::-webkit-scrollbar-corner {
-    background: transparent;
-  }
+  ::-webkit-scrollbar-thumb:hover { background: var(--color-ink-light); }
+  ::-webkit-scrollbar-corner      { background: transparent; }
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   COMPONENT LAYER — Reusable CSS patterns
+   COMPONENT LAYER
 ═══════════════════════════════════════════════════════════════ */
 @layer components {
 
-  /* ── Layout helpers ──────────────────────────────────────── */
-  .container-xl {
-    @apply max-w-7xl mx-auto w-full;
-  }
+  /* ── Layout ──────────────────────────────────────────────── */
+  .container-xl  { @apply max-w-7xl mx-auto w-full; }
+  .section-padding { @apply px-5 sm:px-6 md:px-10 lg:px-16 xl:px-24; }
+  .section-y       { @apply py-20 md:py-28 lg:py-32; }
 
-  .section-padding {
-    @apply px-5 sm:px-6 md:px-10 lg:px-16 xl:px-24;
-  }
-
-  .section-y {
-    @apply py-20 md:py-28 lg:py-32;
-  }
-
-  /* ── Typography helpers ──────────────────────────────────── */
+  /* ── Typography utilities ────────────────────────────────── */
   .eyebrow {
-    @apply font-mono text-xs font-medium uppercase tracking-[0.16em] text-ink-light;
+    @apply font-mono text-xs font-medium uppercase tracking-[0.15em] text-[#94949E];
   }
 
   .display-xl {
-    @apply font-display font-bold text-5xl md:text-6xl lg:text-7xl xl:text-8xl;
-    line-height: 0.96;
-    letter-spacing: -0.04em;
+    @apply font-display font-bold;
+    font-size:      clamp(3rem, 8vw, 6rem);
+    line-height:    0.96;
+    letter-spacing: -0.044em;
   }
 
   .display-lg {
-    @apply font-display font-bold text-4xl md:text-5xl lg:text-6xl;
-    line-height: 1.02;
-    letter-spacing: -0.036em;
+    @apply font-display font-bold;
+    font-size:      clamp(2.25rem, 5.5vw, 4.5rem);
+    line-height:    1.02;
+    letter-spacing: -0.038em;
   }
 
-  .body-lg {
-    @apply text-base md:text-lg text-ink-muted leading-relaxed;
-  }
-
-  .body-sm {
-    @apply text-sm text-ink-muted leading-relaxed;
-  }
+  .body-lg { @apply text-base md:text-lg text-[#56566E] leading-relaxed; }
+  .body-sm { @apply text-sm text-[#56566E] leading-relaxed; }
 
   /* ── Gradient text ───────────────────────────────────────── */
-  .text-gradient-name {
-    background: var(--gradient-name);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
+  .text-gradient,
   .text-gradient-logo {
-    background: var(--gradient-logo);
+    background:             var(--gradient-logo);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    background-clip: text;
+    background-clip:         text;
   }
 
-  /* Alias — default gradient uses logo palette */
-  .text-gradient {
-    background: var(--gradient-logo);
+  .text-gradient-name {
+    background:             var(--gradient-name);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    background-clip: text;
+    background-clip:         text;
   }
 
-  /* ── Glass effect ────────────────────────────────────────── */
+  /* ── Glass ───────────────────────────────────────────────── */
   .glass {
-    background: rgba(255, 255, 255, 0.78);
-    backdrop-filter: blur(20px) saturate(180%);
+    background:              rgba(248, 248, 250, 0.82);
+    backdrop-filter:         blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.65);
+    border:                  1px solid rgba(255, 255, 255, 0.70);
   }
 
-  .glass-subtle {
-    background: rgba(250, 250, 250, 0.85);
-    backdrop-filter: blur(12px) saturate(160%);
-    -webkit-backdrop-filter: blur(12px) saturate(160%);
-    border: 1px solid rgba(234, 234, 238, 0.8);
+  .glass-dark {
+    background:              rgba(13, 13, 18, 0.80);
+    backdrop-filter:         blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+    border:                  1px solid rgba(255, 255, 255, 0.08);
   }
 
-  /* ── Gradient border trick ───────────────────────────────── */
-  .gradient-border {
-    position: relative;
-    border-radius: var(--radius-xl);
-    background: white;
-  }
-  .gradient-border::before {
-    content: '';
-    position: absolute;
-    inset: -1px;
-    border-radius: inherit;
-    padding: 1px;
-    background: var(--gradient-logo);
-    -webkit-mask:
-      linear-gradient(#fff 0 0) content-box,
-      linear-gradient(#fff 0 0);
-    mask:
-      linear-gradient(#fff 0 0) content-box,
-      linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    opacity: 0;
-    transition: opacity var(--ease-smooth);
-    pointer-events: none;
-  }
-  .gradient-border:hover::before {
-    opacity: 1;
-  }
-
-  /* ── Soft glow halo (for hero elements) ─────────────────── */
-  .glow-halo {
-    position: relative;
-  }
-  .glow-halo::after {
-    content: '';
-    position: absolute;
-    inset: -20%;
-    background: var(--gradient-soft);
-    border-radius: 50%;
-    filter: blur(40px);
-    z-index: -1;
-    opacity: 0.7;
-  }
-
-  /* ── Divider ─────────────────────────────────────────────── */
-  .divider {
-    @apply w-full h-px bg-surface-200;
-  }
+  /* ── Dividers ────────────────────────────────────────────── */
+  .divider { @apply w-full h-px bg-[#E8E8EE]; }
 
   .divider-gradient {
     height: 1px;
     background: linear-gradient(
       90deg,
       transparent 0%,
-      var(--color-surface-300) 30%,
-      var(--color-surface-300) 70%,
+      #D6D6E0 25%,
+      #D6D6E0 75%,
       transparent 100%
     );
   }
 
-  /* ── Badge / Tag ─────────────────────────────────────────── */
+  /* ── Badge ───────────────────────────────────────────────── */
   .badge {
-    @apply inline-flex items-center gap-1.5
-           px-3 py-1 rounded-full
-           text-xs font-mono font-medium
-           bg-surface-200 text-ink-muted;
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full;
+    @apply text-xs font-mono font-medium;
+    @apply bg-[#F2F2F6] border border-[#E8E8EE] text-[#56566E];
   }
 
   .badge-brand {
-    @apply inline-flex items-center gap-1.5
-           px-3 py-1 rounded-full
-           text-xs font-mono font-medium;
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full;
+    @apply text-xs font-mono font-medium;
     background: rgba(74, 127, 212, 0.10);
-    color: var(--brand-blue);
-    border: 1px solid rgba(74, 127, 212, 0.18);
+    color:      var(--brand-blue);
+    border:     1px solid rgba(74, 127, 212, 0.20);
   }
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   UTILITY LAYER — One-off helpers
+   UTILITY LAYER
 ═══════════════════════════════════════════════════════════════ */
 @layer utilities {
 
-  /* Gradient backgrounds */
-  .bg-gradient-brand  { background: var(--gradient-logo); }
-  .bg-gradient-name   { background: var(--gradient-name); }
-  .bg-gradient-soft   { background: var(--gradient-soft); }
-  .bg-hero-glow       { background: var(--gradient-hero-glow); }
+  /* Backgrounds */
+  .bg-gradient-brand { background: var(--gradient-logo); }
+  .bg-gradient-soft  { background: var(--gradient-soft); }
 
   /* Transition presets */
-  .transition-base    { transition: all var(--ease-base); }
-  .transition-smooth  { transition: all var(--ease-smooth); }
-  .transition-spring  { transition: all var(--ease-spring); }
+  .transition-fast   { transition: all var(--t-fast);   }
+  .transition-base   { transition: all var(--t-base);   }
+  .transition-slow   { transition: all var(--t-slow);   }
+  .transition-spring { transition: all var(--t-spring); }
+  .transition-expo   { transition: all var(--t-expo);   }
 
-  /* Prevent text select on interactive elements */
-  .no-select          { user-select: none; -webkit-user-select: none; }
+  /* Text utilities */
+  .no-select { user-select: none; -webkit-user-select: none; }
 
-  /* Full bleed — breaks out of any padding container */
+  .truncate-2 {
+    display:              -webkit-box;
+    -webkit-line-clamp:   2;
+    -webkit-box-orient:   vertical;
+    overflow:             hidden;
+  }
+  .truncate-3 {
+    display:              -webkit-box;
+    -webkit-line-clamp:   3;
+    -webkit-box-orient:   vertical;
+    overflow:             hidden;
+  }
+
+  /* Full bleed */
   .full-bleed {
-    width: 100vw;
+    width:       100vw;
     margin-left: calc(50% - 50vw);
   }
 
-  /* Truncate with ellipsis */
-  .truncate-2 {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-  .truncate-3 {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+  /* Smooth image rendering */
+  .img-smooth {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
   }
 
-  /* Visually hidden (accessible) */
-  .sr-only-focusable:focus {
-    @apply not-sr-only;
-  }
+  /* Glow utilities */
+  .glow-blue   { box-shadow: 0 0 28px rgba(74,127,212,0.22);  }
+  .glow-green  { box-shadow: 0 0 28px rgba(58,122,58,0.20);   }
+  .glow-purple { box-shadow: 0 0 28px rgba(107,74,155,0.20);  }
 }
