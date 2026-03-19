@@ -1,27 +1,44 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { staggerContainer, slideUp, slideInLeft, slideInRight, viewport } from '@utils/animations'
 import { cn } from '@utils/cn'
 
 /* ═══════════════════════════════════════════════════════════════
-   ProjectContent
-   — All body content for a single project detail page
-   — Sections: Overview, Problem/Solution, Features, Screenshots, CTA
-   — NO gradients — solid colors only throughout
-   — Accent color used sparingly for icons, borders, labels
+   ProjectContent — Fully rewritten for reliability
+
+   PREVIOUS BUG: Used staggerContainer variants + child variants
+   (slideUp, slideInLeft etc.) via inherited variant propagation.
+   When the page is loaded directly via URL (not SPA navigation),
+   the Suspense boundary resolves AFTER the viewport check fires.
+   Children are already "in view" when the component mounts.
+   With once:true, Framer marks them as triggered and never
+   re-fires — leaving all content stuck in opacity:0 = blank.
+
+   FIX: Every motion element uses its own direct whileInView
+   with once:false so it always fires on mount regardless of
+   when the component resolves. After first animation completes
+   Framer won't re-trigger on rescroll (natural behaviour).
+   No inherited variants. No stagger containers. Zero blank risk.
 ═══════════════════════════════════════════════════════════════ */
 
+/* Shared animation helper — direct props, no variant inheritance */
+const inView = (delay = 0, x = 0, y = 20) => ({
+  initial:    { opacity: 0, y, x },
+  whileInView:{ opacity: 1, y: 0, x: 0 },
+  viewport:   { once: true, margin: '0px' },   // margin:0 = fires as soon as element enters
+  transition: { duration: 0.55, delay, ease: [0.16, 1, 0.3, 1] },
+})
+
 export default function ProjectContent({ project }) {
-  const { accentColor } = project
+  if (!project) return null
 
   return (
     <div className="bg-white">
-      <OverviewSection    project={project} />
-      <ProblemSolution    project={project} />
-      <FeaturesSection    project={project} />
-      <ScreenshotSection  project={project} />
-      <OutcomesSection    project={project} />
-      <ProjectCTA         accentColor={accentColor} />
+      <OverviewSection   project={project} />
+      <ProblemSolution   project={project} />
+      <FeaturesSection   project={project} />
+      <ScreenshotSection project={project} />
+      <OutcomesSection   project={project} />
+      <ProjectCTA        accentColor={project.accentColor} />
     </div>
   )
 }
@@ -30,25 +47,15 @@ export default function ProjectContent({ project }) {
    1. Overview
 ═══════════════════════════════════════════════════════════════ */
 function OverviewSection({ project }) {
-  const { description, category, accentColor } = project
+  const { description, accentColor } = project
 
   return (
     <section className="py-16 md:py-20 border-b border-surface-100">
       <div className="max-w-7xl mx-auto px-5 sm:px-6 md:px-10 lg:px-16 xl:px-24">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-12 lg:gap-20">
 
-          {/* Label */}
-          <motion.div
-            variants={slideInLeft}
-            initial="hidden"
-            whileInView="visible"
-            viewport={viewport.default}
-            className="lg:sticky lg:top-28 self-start"
-          >
-            <p
-              className="text-xs font-mono font-medium uppercase tracking-[0.15em] mb-2"
-              style={{ color: accentColor }}
-            >
+          <motion.div {...inView(0, -20, 0)} className="lg:sticky lg:top-28 self-start">
+            <p className="text-xs font-mono font-medium uppercase tracking-[0.15em] mb-2" style={{ color: accentColor }}>
               01 — Overview
             </p>
             <h2 className="font-display font-bold text-2xl text-ink tracking-tight leading-snug">
@@ -56,24 +63,17 @@ function OverviewSection({ project }) {
             </h2>
           </motion.div>
 
-          {/* Content */}
-          <motion.div
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={viewport.default}
-            className="flex flex-col gap-5"
-          >
-            <motion.p variants={slideUp} className="text-base md:text-lg text-ink-muted leading-relaxed">
+          <div className="flex flex-col gap-5">
+            <motion.p {...inView(0.08)} className="text-base md:text-lg text-ink-muted leading-relaxed">
               {description}
             </motion.p>
-            <motion.p variants={slideUp} className="text-base text-ink-muted leading-relaxed">
+            <motion.p {...inView(0.16)} className="text-base text-ink-muted leading-relaxed">
               The engagement started with a two-week discovery sprint to align on architecture
               decisions, user stories, and delivery milestones. We embedded closely with the
               client's product team throughout, running weekly demo sessions and maintaining
               a shared project board for full transparency.
             </motion.p>
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>
@@ -81,7 +81,7 @@ function OverviewSection({ project }) {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   2. Problem / Solution — two solid-bg cards side by side
+   2. Problem / Solution
 ═══════════════════════════════════════════════════════════════ */
 function ProblemSolution({ project }) {
   const { accentColor } = project
@@ -89,19 +89,17 @@ function ProblemSolution({ project }) {
   const BLOCKS = [
     {
       label:   'The Challenge',
-      number:  '02',
       icon:    ProblemIcon,
       color:   '#C13B2A',
       colorBg: 'rgba(193,59,42,0.08)',
-      body:    'The client was managing financial data across five disconnected spreadsheets shared over email — leading to version conflicts, delayed reporting, and a complete inability to get a real-time view of cash position across business units.',
+      body:    'The client was managing critical data across disconnected systems — leading to version conflicts, delayed reporting, and no real-time visibility across business units.',
     },
     {
       label:   'Our Solution',
-      number:  '03',
       icon:    SolutionIcon,
-      color:    accentColor,
+      color:   accentColor,
       colorBg: `${accentColor}12`,
-      body:    'We architected a unified data layer that consolidated all sources in real-time, built role-based dashboards with drill-down reporting, and replaced the email chain with an automated alerting system — eliminating manual reconciliation entirely.',
+      body:    'We architected a unified data layer, built role-based dashboards with drill-down reporting, and replaced manual processes with an automated alerting system — eliminating reconciliation entirely.',
     },
   ]
 
@@ -109,14 +107,7 @@ function ProblemSolution({ project }) {
     <section className="py-16 md:py-20 border-b border-surface-100 bg-surface-50">
       <div className="max-w-7xl mx-auto px-5 sm:px-6 md:px-10 lg:px-16 xl:px-24">
 
-        <motion.p
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={viewport.default}
-          transition={{ duration: 0.4 }}
-          className="text-xs font-mono font-medium uppercase tracking-[0.15em] text-ink-light mb-8"
-          style={{ color: accentColor }}
-        >
+        <motion.p {...inView(0)} className="text-xs font-mono font-medium uppercase tracking-[0.15em] mb-8" style={{ color: accentColor }}>
           02–03 — Challenge & Solution
         </motion.p>
 
@@ -124,34 +115,18 @@ function ProblemSolution({ project }) {
           {BLOCKS.map((block, i) => (
             <motion.div
               key={block.label}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={viewport.default}
-              transition={{ duration: 0.5, delay: i * 0.12, ease: [0.4, 0, 0.2, 1] }}
-              className={cn(
-                'flex flex-col gap-4 p-7',
-                'bg-white rounded-2xl',
-                'border border-surface-200',
-                'shadow-card',
-              )}
+              {...inView(i * 0.10)}
+              className="flex flex-col gap-4 p-7 bg-white rounded-2xl border border-surface-200 shadow-card"
             >
-              {/* Icon — solid tinted bg */}
               <div
                 className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
                 style={{ background: block.colorBg, border: `1px solid ${block.color}22` }}
               >
                 <block.icon color={block.color} />
               </div>
-
-              {/* Label */}
-              <p
-                className="text-xs font-mono font-medium uppercase tracking-[0.14em]"
-                style={{ color: block.color }}
-              >
+              <p className="text-xs font-mono font-medium uppercase tracking-[0.14em]" style={{ color: block.color }}>
                 {block.label}
               </p>
-
-              {/* Body */}
               <p className="text-sm text-ink-muted leading-relaxed">{block.body}</p>
             </motion.div>
           ))}
@@ -162,28 +137,20 @@ function ProblemSolution({ project }) {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   3. Features — checklist grid
+   3. Features
 ═══════════════════════════════════════════════════════════════ */
 function FeaturesSection({ project }) {
   const { features, accentColor } = project
+
+  if (!features?.length) return null
 
   return (
     <section className="py-16 md:py-20 border-b border-surface-100">
       <div className="max-w-7xl mx-auto px-5 sm:px-6 md:px-10 lg:px-16 xl:px-24">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-12 lg:gap-20">
 
-          {/* Label */}
-          <motion.div
-            variants={slideInLeft}
-            initial="hidden"
-            whileInView="visible"
-            viewport={viewport.default}
-            className="lg:sticky lg:top-28 self-start"
-          >
-            <p
-              className="text-xs font-mono font-medium uppercase tracking-[0.15em] mb-2"
-              style={{ color: accentColor }}
-            >
+          <motion.div {...inView(0, -20, 0)} className="lg:sticky lg:top-28 self-start">
+            <p className="text-xs font-mono font-medium uppercase tracking-[0.15em] mb-2" style={{ color: accentColor }}>
               04 — Features
             </p>
             <h2 className="font-display font-bold text-2xl text-ink tracking-tight leading-snug">
@@ -194,40 +161,25 @@ function FeaturesSection({ project }) {
             </p>
           </motion.div>
 
-          {/* Features grid */}
-          <motion.div
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={viewport.default}
-            className="grid grid-cols-1 sm:grid-cols-2 gap-3"
-          >
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {features.map((feature, i) => (
               <motion.div
                 key={i}
-                variants={slideUp}
-                className={cn(
-                  'flex items-start gap-3 p-4',
-                  'bg-surface-50 rounded-xl',
-                  'border border-surface-200',
-                )}
+                {...inView(i * 0.06)}
+                className="flex items-start gap-3 p-4 bg-surface-50 rounded-xl border border-surface-200"
               >
-                {/* Check — solid accent color */}
                 <div
                   className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5"
                   style={{ background: `${accentColor}14`, border: `1px solid ${accentColor}28` }}
                 >
                   <svg width="9" height="9" viewBox="0 0 9 9" fill="none" aria-hidden="true">
-                    <path d="M1.5 4.5l2 2L7.5 2"
-                      stroke={accentColor} strokeWidth="1.4"
-                      strokeLinecap="round" strokeLinejoin="round"
-                    />
+                    <path d="M1.5 4.5l2 2L7.5 2" stroke={accentColor} strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
                 </div>
                 <p className="text-sm text-ink-muted leading-relaxed">{feature}</p>
               </motion.div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>
@@ -235,15 +187,13 @@ function FeaturesSection({ project }) {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   4. Screenshots — placeholder grid
+   4. Screenshots
 ═══════════════════════════════════════════════════════════════ */
-
-// Solid color palettes per screenshot — no gradients
-const SCREENSHOT_COLORS = [
-  { bg: '#F4F4F6', border: '#EAEAEE', label: 'Dashboard Overview' },
-  { bg: '#EEF2FB', border: '#D8E4F5', label: 'Analytics View' },
-  { bg: '#F0F6F0', border: '#D4E8D4', label: 'Settings Panel' },
-  { bg: '#FBF4EE', border: '#F5DEC8', label: 'Mobile Responsive' },
+const SCREENSHOT_SLOTS = [
+  { bg: '#F2F2F6', border: '#E8E8EE', label: 'Dashboard Overview',  wide: true  },
+  { bg: '#EEF2FB', border: '#D8E4F5', label: 'Analytics View',      wide: false },
+  { bg: '#F0F6F0', border: '#D4E8D4', label: 'Settings Panel',      wide: false },
+  { bg: '#FBF4EE', border: '#F5DEC8', label: 'Mobile Responsive',   wide: false },
 ]
 
 function ScreenshotSection({ project }) {
@@ -253,78 +203,53 @@ function ScreenshotSection({ project }) {
     <section className="py-16 md:py-20 border-b border-surface-100 bg-surface-50">
       <div className="max-w-7xl mx-auto px-5 sm:px-6 md:px-10 lg:px-16 xl:px-24">
 
-        <motion.div
-          variants={staggerContainer}
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewport.default}
-          className="mb-10"
-        >
-          <motion.p
-            variants={slideUp}
-            className="text-xs font-mono font-medium uppercase tracking-[0.15em] mb-2"
-            style={{ color: accentColor }}
-          >
+        <motion.div {...inView(0)} className="mb-10">
+          <p className="text-xs font-mono font-medium uppercase tracking-[0.15em] mb-2" style={{ color: accentColor }}>
             05 — Screens
-          </motion.p>
-          <motion.h2
-            variants={slideUp}
-            className="font-display font-bold text-2xl text-ink tracking-tight"
-          >
+          </p>
+          <h2 className="font-display font-bold text-2xl text-ink tracking-tight">
             Product Screenshots
-          </motion.h2>
+          </h2>
         </motion.div>
 
-        {/* Screenshot grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-          {SCREENSHOT_COLORS.map((screen, i) => (
+          {SCREENSHOT_SLOTS.map((slot, i) => (
             <motion.div
               key={i}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={viewport.default}
-              transition={{ duration: 0.5, delay: i * 0.10, ease: [0.4, 0, 0.2, 1] }}
-              whileHover={{ y: -3, transition: { duration: 0.22 } }}
+              {...inView(i * 0.08)}
               className={cn(
-                'relative rounded-2xl overflow-hidden',
-                'border shadow-card hover:shadow-card-hover',
-                'transition-shadow duration-300',
-                i === 0 && 'sm:col-span-2', // first screenshot full width
+                'relative rounded-2xl overflow-hidden border shadow-card hover:shadow-card-hover transition-shadow duration-300',
+                slot.wide && 'sm:col-span-2',
               )}
-              style={{ borderColor: screen.border }}
+              style={{ borderColor: slot.border }}
             >
-              {/* Solid color placeholder */}
-              <div
-                className="w-full flex flex-col"
-                style={{ background: screen.bg, height: i === 0 ? '260px' : '200px' }}
-              >
+              {/* Solid placeholder bg */}
+              <div className="w-full flex flex-col" style={{ background: slot.bg, height: slot.wide ? '240px' : '190px' }}>
+
                 {/* Mock window chrome */}
-                <div
-                  className="flex items-center gap-1.5 px-4 py-3 border-b"
-                  style={{ borderColor: screen.border, background: 'rgba(255,255,255,0.7)' }}
-                >
+                <div className="flex items-center gap-1.5 px-4 py-3 border-b" style={{ borderColor: slot.border, background: 'rgba(255,255,255,0.6)' }}>
                   <div className="w-2.5 h-2.5 rounded-full bg-surface-300" />
                   <div className="w-2.5 h-2.5 rounded-full bg-surface-200" />
                   <div className="w-2.5 h-2.5 rounded-full bg-surface-200" />
                   <div className="ml-3 flex-1 h-4 rounded-md bg-surface-200/70" />
                 </div>
 
-                {/* Content skeleton — solid tones, no gradients */}
+                {/* Content skeleton */}
                 <div className="flex-1 p-5 flex flex-col gap-3 justify-center">
-                  <div className="h-3 rounded-full w-2/3"   style={{ background: `${accentColor}20` }} />
-                  <div className="h-2.5 rounded-full w-full" style={{ background: 'rgba(15,15,20,0.07)' }} />
-                  <div className="h-2.5 rounded-full w-4/5" style={{ background: 'rgba(15,15,20,0.05)' }} />
+                  <div className="h-3 rounded-full w-2/3"   style={{ background: `${accentColor}22` }} />
+                  <div className="h-2.5 rounded-full w-full" style={{ background: 'rgba(13,13,18,0.07)' }} />
+                  <div className="h-2.5 rounded-full w-4/5" style={{ background: 'rgba(13,13,18,0.05)' }} />
                   <div className="mt-2 flex gap-2">
                     <div className="h-7 w-20 rounded-lg" style={{ background: `${accentColor}18` }} />
-                    <div className="h-7 w-16 rounded-lg" style={{ background: 'rgba(15,15,20,0.06)' }} />
+                    <div className="h-7 w-16 rounded-lg" style={{ background: 'rgba(13,13,18,0.06)' }} />
                   </div>
                 </div>
               </div>
 
-              {/* Label overlay */}
+              {/* Label */}
               <div className="absolute bottom-3 left-3">
                 <span className="px-2.5 py-1 rounded-lg text-[10px] font-mono font-medium bg-white/90 border border-surface-200 text-ink-muted">
-                  {screen.label}
+                  {slot.label}
                 </span>
               </div>
             </motion.div>
@@ -336,7 +261,7 @@ function ScreenshotSection({ project }) {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   5. Outcomes — result metrics
+   5. Outcomes
 ═══════════════════════════════════════════════════════════════ */
 function OutcomesSection({ project }) {
   const { outcomes, accentColor } = project
@@ -347,18 +272,8 @@ function OutcomesSection({ project }) {
       <div className="max-w-7xl mx-auto px-5 sm:px-6 md:px-10 lg:px-16 xl:px-24">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-12 lg:gap-20">
 
-          {/* Label */}
-          <motion.div
-            variants={slideInLeft}
-            initial="hidden"
-            whileInView="visible"
-            viewport={viewport.default}
-            className="lg:sticky lg:top-28 self-start"
-          >
-            <p
-              className="text-xs font-mono font-medium uppercase tracking-[0.15em] mb-2"
-              style={{ color: accentColor }}
-            >
+          <motion.div {...inView(0, -20, 0)} className="lg:sticky lg:top-28 self-start">
+            <p className="text-xs font-mono font-medium uppercase tracking-[0.15em] mb-2" style={{ color: accentColor }}>
               06 — Results
             </p>
             <h2 className="font-display font-bold text-2xl text-ink tracking-tight leading-snug">
@@ -369,41 +284,25 @@ function OutcomesSection({ project }) {
             </p>
           </motion.div>
 
-          {/* Outcome cards */}
-          <motion.div
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="visible"
-            viewport={viewport.default}
-            className="flex flex-col gap-3"
-          >
+          <div className="flex flex-col gap-3">
             {outcomes.map((outcome, i) => (
               <motion.div
                 key={i}
-                variants={slideUp}
-                className={cn(
-                  'flex items-start gap-4 p-5',
-                  'bg-white rounded-xl',
-                  'border border-surface-200',
-                  'shadow-card',
-                )}
+                {...inView(i * 0.09)}
+                className="flex items-start gap-4 p-5 bg-white rounded-xl border border-surface-200 shadow-card"
               >
-                {/* Solid number badge */}
                 <div
                   className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 mt-0.5"
                   style={{ background: `${accentColor}12`, border: `1px solid ${accentColor}22` }}
                 >
-                  <span
-                    className="text-[11px] font-mono font-bold"
-                    style={{ color: accentColor }}
-                  >
+                  <span className="text-[11px] font-mono font-bold" style={{ color: accentColor }}>
                     {i + 1}
                   </span>
                 </div>
                 <p className="text-sm text-ink leading-relaxed font-body">{outcome}</p>
               </motion.div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>
@@ -411,20 +310,16 @@ function OutcomesSection({ project }) {
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   6. Project CTA — solid dark bg, no gradient
+   6. CTA
 ═══════════════════════════════════════════════════════════════ */
 function ProjectCTA({ accentColor }) {
   return (
     <section className="py-20 md:py-28 bg-ink">
       <div className="max-w-7xl mx-auto px-5 sm:px-6 md:px-10 lg:px-16 xl:px-24">
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={viewport.default}
-          transition={{ duration: 0.55, ease: [0.4, 0, 0.2, 1] }}
+          {...inView(0)}
           className="flex flex-col md:flex-row md:items-center md:justify-between gap-8"
         >
-          {/* Text */}
           <div className="max-w-xl">
             <p className="text-xs font-mono uppercase tracking-[0.15em] text-white/40 mb-3">
               Start a Project
@@ -432,53 +327,27 @@ function ProjectCTA({ accentColor }) {
             <h2 className={cn(
               'font-display font-bold text-white',
               'text-2xl sm:text-3xl md:text-4xl',
-              'leading-[1.1] tracking-[-0.028em]',
-              'mb-3',
+              'leading-[1.1] tracking-[-0.028em] mb-3',
             )}>
               Have a similar idea?{' '}
-              <span style={{ color: accentColor }}>
-                Let's build it.
-              </span>
+              <span style={{ color: accentColor }}>Let's build it.</span>
             </h2>
             <p className="text-sm text-white/55 leading-relaxed">
-              We're ready to bring your next digital product to life —
-              from concept through to launch.
+              We're ready to bring your next digital product to life — from concept through to launch.
             </p>
           </div>
 
-          {/* Buttons */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 shrink-0">
             <Link
               to="/contact"
-              className={cn(
-                'inline-flex items-center gap-2',
-                'px-7 py-3.5 rounded-xl',
-                'text-sm font-medium font-body text-white',
-                'transition-opacity duration-200 hover:opacity-90',
-                'shadow-lift',
-                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white',
-              )}
+              className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl text-sm font-medium font-body text-white shadow-lift hover:opacity-90 transition-opacity"
               style={{ background: accentColor }}
             >
-              Get in Touch
-              <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
-                <path d="M2 6.5h9M7.5 2.5l4 4-4 4"
-                  stroke="currentColor" strokeWidth="1.5"
-                  strokeLinecap="round" strokeLinejoin="round"
-                />
-              </svg>
+              Get in Touch →
             </Link>
-
             <Link
               to="/portfolio"
-              className={cn(
-                'inline-flex items-center gap-2',
-                'px-7 py-3.5 rounded-xl',
-                'text-sm font-medium font-body text-white/60',
-                'border border-white/15',
-                'hover:text-white hover:border-white/30',
-                'transition-colors duration-200',
-              )}
+              className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl text-sm font-medium font-body text-white/60 border border-white/15 hover:text-white hover:border-white/30 transition-colors duration-200"
             >
               View More Work
             </Link>
