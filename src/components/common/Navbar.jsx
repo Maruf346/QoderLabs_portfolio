@@ -127,7 +127,7 @@ export default function Navbar() {
             <Link
               to="/"
               onClick={close}
-              className="flex items-center gap-2.5 shrink-0 group min-w-0"
+              className="flex items-center gap-0 shrink-0 group min-w-0"
               aria-label="QoderLabs home"
             >
               <motion.img
@@ -142,7 +142,7 @@ export default function Navbar() {
               <img
                 src="/name.png"
                 alt="QoderLabs"
-                className="hidden sm:block h-[65px] w-auto object-contain select-none opacity-90 group-hover:opacity-100 transition-opacity duration-200"
+                className="hidden sm:block h-[65px] w-auto object-contain select-none opacity-90 group-hover:opacity-100 transition-opacity duration-200 -ml-12"
                 draggable={false}
               />
             </Link>

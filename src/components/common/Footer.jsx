@@ -89,7 +89,7 @@ export default function Footer() {
             {/* Logo + Name */}
             <Link
               to="/"
-              className="inline-flex items-center gap-3 group w-fit"
+              className="inline-flex items-center gap-0 group w-fit"
               aria-label="QoderLabs — home"
             >
               <motion.img
@@ -105,7 +105,7 @@ export default function Footer() {
               <img
                 src="/name.png"
                 alt="QoderLabs"
-                className="h-[85px] w-auto object-contain no-select"
+                className="h-[65px] w-auto object-contain no-select -ml-12"
                 draggable={false}
               />
             </Link>
