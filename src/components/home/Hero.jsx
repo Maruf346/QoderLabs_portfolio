@@ -314,9 +314,9 @@ export default function Hero() {
         className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
         aria-hidden="true"
       >
-        <p className="text-[9px] font-mono tracking-[0.2em] uppercase text-[#94949E]">
+        {/* <p className="text-[9px] font-mono tracking-[0.2em] uppercase text-[#94949E]">
           Scroll
-        </p>
+        </p> */}
         <div className="relative w-px h-9 rounded-full overflow-hidden bg-[#E8E8EE]">
           <motion.div
             animate={{ y: ['-100%', '200%'] }}

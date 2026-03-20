@@ -134,7 +134,7 @@ export default function WhyChooseUs() {
             </motion.p>
 
             {/* Stats row */}
-            <div className="grid grid-cols-3 gap-4 sm:gap-6">
+            <div className="grid grid-cols-3 gap-3 sm:gap-6">
               {STATS.map((stat, i) => (
                 <motion.div
                   key={stat.label}

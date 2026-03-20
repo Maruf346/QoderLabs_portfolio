@@ -167,8 +167,8 @@ function TechItem({ tech, index }) {
       whileHover={{ y: -3, transition: { duration: 0.2, ease: [0.4, 0, 0.2, 1] } }}
       whileTap={{ scale: 0.95 }}
       className={cn(
-        'flex flex-col items-center justify-center gap-2.5',
-        'py-4 px-2 rounded-xl',
+        'flex flex-col items-center justify-center gap-2 min-w-0',
+        'py-3.5 px-1.5 rounded-xl',
         'bg-white border border-surface-200',
         'shadow-card cursor-default',
         'transition-shadow duration-200',
