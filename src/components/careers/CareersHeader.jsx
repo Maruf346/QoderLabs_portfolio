@@ -2,37 +2,55 @@ import { motion } from 'framer-motion'
 import { staggerContainer, slideUp } from '@utils/animations'
 import { cn } from '@utils/cn'
 
-/* ═══════════════════════════════════════════════════════════════
-   Careers Header
-   — Minimal page hero, NO gradients
-   — Solid surface-50 background
-   — Strong typography, left-aligned
-   — Culture values strip below headline
-═══════════════════════════════════════════════════════════════ */
-
 const VALUES = [
-  { label: 'Remote-first',    icon: RemoteIcon },
-  { label: 'Async by default',icon: AsyncIcon },
-  { label: 'Results-driven',  icon: ResultsIcon },
-  { label: 'High trust',      icon: TrustIcon },
+  { label: 'Remote-first',     icon: RemoteIcon  },
+  { label: 'Async by default', icon: AsyncIcon   },
+  { label: 'Results-driven',   icon: ResultsIcon },
+  { label: 'High trust',       icon: TrustIcon   },
 ]
 
 export default function CareersHeader({ openCount = 0 }) {
   return (
     <section className="relative pt-36 pb-14 md:pt-44 md:pb-16 bg-surface-50 overflow-hidden">
 
-      {/* Dot grid — solid ink dots, very faint */}
+      {/* Gradient glow — top left green, top right red */}
+      <div
+        aria-hidden="true"
+        className="absolute top-0 left-0 w-[480px] h-[360px] pointer-events-none"
+        style={{
+          background:
+            'radial-gradient(ellipse 70% 60% at 0% 0%, rgba(58,107,42,0.09) 0%, transparent 70%)',
+        }}
+      />
+      <div
+        aria-hidden="true"
+        className="absolute top-0 right-0 w-[360px] h-[280px] pointer-events-none"
+        style={{
+          background:
+            'radial-gradient(ellipse 60% 55% at 100% 0%, rgba(174,56,32,0.07) 0%, transparent 70%)',
+        }}
+      />
+
+      {/* Dot grid */}
       <div
         aria-hidden="true"
         className="absolute inset-0 opacity-[0.022]"
         style={{
-          backgroundImage: 'radial-gradient(circle, #0F0F14 1px, transparent 1px)',
+          backgroundImage: 'radial-gradient(circle, #0D0D12 1px, transparent 1px)',
           backgroundSize:  '28px 28px',
         }}
       />
 
-      {/* Solid bottom border */}
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-surface-200" />
+      {/* Bottom rule — gradient line */}
+      <div
+        aria-hidden="true"
+        className="absolute bottom-0 left-0 right-0 h-px"
+        style={{
+          background:
+            'linear-gradient(90deg, transparent, #6B6218 20%, #9E481A 50%, #6B6218 80%, transparent)',
+          opacity: 0.25,
+        }}
+      />
 
       <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-6 md:px-10 lg:px-16 xl:px-24">
         <motion.div
@@ -40,17 +58,19 @@ export default function CareersHeader({ openCount = 0 }) {
           initial="hidden"
           animate="visible"
         >
-          {/* Eyebrow */}
+          {/* Eyebrow — gradient dot */}
           <motion.p
             variants={slideUp}
             className="inline-flex items-center gap-2 font-mono text-xs font-medium uppercase tracking-[0.15em] text-ink-light mb-5"
           >
-            {/* Solid dot — no gradient */}
-            <span className="w-1.5 h-1.5 rounded-full bg-brand-green" />
+            <span
+              className="w-1.5 h-1.5 rounded-full shrink-0"
+              style={{ background: 'var(--gradient-logo)' }}
+            />
             We're hiring
           </motion.p>
 
-          {/* Headline — solid ink, no gradient text */}
+          {/* Headline — "QoderLabs" is gradient */}
           <motion.h1
             variants={slideUp}
             className={cn(
@@ -60,7 +80,8 @@ export default function CareersHeader({ openCount = 0 }) {
               'mb-5 max-w-2xl',
             )}
           >
-            Careers at QoderLabs
+            Careers at{' '}
+            <span className="text-gradient-logo">QoderLabs</span>
           </motion.h1>
 
           {/* Subtext */}
@@ -73,18 +94,25 @@ export default function CareersHeader({ openCount = 0 }) {
             work with clients who are building something meaningful — you'll fit right in.
           </motion.p>
 
-          {/* Open roles count — solid bg pill */}
+          {/* Open roles count */}
           <motion.div variants={slideUp} className="flex items-center gap-4 mb-10">
-            <div className={cn(
-              'inline-flex items-center gap-2',
-              'px-4 py-2 rounded-xl',
-              'bg-white border border-surface-200',
-              'shadow-card',
-            )}>
-              {/* Live dot — solid brand-green */}
-              <span className="relative flex w-2 h-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-green opacity-50" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-green" />
+            <div
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white shadow-card"
+              style={{
+                boxShadow:
+                  '0 1px 3px rgba(13,13,18,0.05), 0 4px 16px rgba(13,13,18,0.05), inset 0 0 0 1px rgba(142,86,42,0.18)',
+              }}
+            >
+              {/* Live pulse dot — gradient fill */}
+              <span className="relative flex w-2 h-2 shrink-0">
+                <span
+                  className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-50"
+                  style={{ background: 'var(--gradient-logo)' }}
+                />
+                <span
+                  className="relative inline-flex rounded-full h-2 w-2"
+                  style={{ background: 'var(--gradient-logo)' }}
+                />
               </span>
               <span className="text-sm font-medium font-body text-ink">
                 {openCount} open position{openCount !== 1 ? 's' : ''}
@@ -92,11 +120,8 @@ export default function CareersHeader({ openCount = 0 }) {
             </div>
           </motion.div>
 
-          {/* Culture values strip — solid bg chips */}
-          <motion.div
-            variants={slideUp}
-            className="flex flex-wrap gap-2"
-          >
+          {/* Culture value chips */}
+          <motion.div variants={slideUp} className="flex flex-wrap gap-2">
             {VALUES.map(({ label, icon: Icon }) => (
               <div
                 key={label}
@@ -119,7 +144,7 @@ export default function CareersHeader({ openCount = 0 }) {
   )
 }
 
-/* ── Value icons — minimal solid strokes ─────────────────────── */
+/* ── Value icons ─────────────────────────────────────────────── */
 function RemoteIcon() {
   return (
     <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
@@ -129,7 +154,6 @@ function RemoteIcon() {
     </svg>
   )
 }
-
 function AsyncIcon() {
   return (
     <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
@@ -138,7 +162,6 @@ function AsyncIcon() {
     </svg>
   )
 }
-
 function ResultsIcon() {
   return (
     <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
@@ -146,7 +169,6 @@ function ResultsIcon() {
     </svg>
   )
 }
-
 function TrustIcon() {
   return (
     <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">

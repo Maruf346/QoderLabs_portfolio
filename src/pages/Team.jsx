@@ -5,16 +5,6 @@ import TeamGrid from '@components/team/TeamGrid'
 import CTA      from '@components/home/CTA'
 import { cn }   from '@utils/cn'
 
-/* ═══════════════════════════════════════════════════════════════
-   Team Page
-
-   Layout:
-     1. Page header  — title, description, member count
-     2. Team grid    — leadership row + rest of team
-     3. Hiring strip — solid bg nudge toward careers
-     4. CTA banner   — shared conversion section
-═══════════════════════════════════════════════════════════════ */
-
 const memberCount = getAllMembers().length
 
 export default function Team() {
@@ -25,20 +15,15 @@ export default function Team() {
       animate="visible"
       exit="exit"
     >
-      {/* 1 ── Page header */}
       <TeamHeader />
 
-      {/* 2 ── Team grid */}
       <section className="py-16 md:py-24 bg-surface-50">
         <div className="max-w-7xl mx-auto px-5 sm:px-6 md:px-10 lg:px-16 xl:px-24">
           <TeamGrid />
         </div>
       </section>
 
-      {/* 3 ── Hiring nudge */}
       <HiringStrip />
-
-      {/* 4 ── CTA banner */}
       <CTA />
     </motion.div>
   )
@@ -49,28 +34,44 @@ function TeamHeader() {
   return (
     <section className="relative pt-36 pb-14 md:pt-44 md:pb-16 bg-surface-50 overflow-hidden">
 
+      {/* Gradient glow — top left warm, top right cool */}
+      <div
+        aria-hidden="true"
+        className="absolute top-0 left-0 w-[500px] h-[380px] pointer-events-none"
+        style={{
+          background:
+            'radial-gradient(ellipse 70% 60% at 0% 0%, rgba(58,107,42,0.09) 0%, transparent 70%)',
+        }}
+      />
+      <div
+        aria-hidden="true"
+        className="absolute top-0 right-0 w-[400px] h-[300px] pointer-events-none"
+        style={{
+          background:
+            'radial-gradient(ellipse 60% 55% at 100% 0%, rgba(174,56,32,0.07) 0%, transparent 70%)',
+        }}
+      />
+
       {/* Dot grid */}
       <div
         aria-hidden="true"
         className="absolute inset-0 opacity-[0.022]"
         style={{
-          backgroundImage: 'radial-gradient(circle, #0F0F14 1px, transparent 1px)',
+          backgroundImage: 'radial-gradient(circle, #0D0D12 1px, transparent 1px)',
           backgroundSize:  '28px 28px',
         }}
       />
 
-      {/* Subtle top glow — very faint */}
+      {/* Bottom rule — gradient line */}
       <div
         aria-hidden="true"
-        className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[360px] pointer-events-none"
+        className="absolute bottom-0 left-0 right-0 h-px"
         style={{
           background:
-            'radial-gradient(ellipse 60% 50% at 50% 0%, rgba(107,74,155,0.07) 0%, transparent 70%)',
+            'linear-gradient(90deg, transparent, #6B6218 20%, #9E481A 50%, #6B6218 80%, transparent)',
+          opacity: 0.25,
         }}
       />
-
-      {/* Bottom rule */}
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-surface-200" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-6 md:px-10 lg:px-16 xl:px-24">
         <motion.div
@@ -79,16 +80,19 @@ function TeamHeader() {
           animate="visible"
           className="max-w-2xl"
         >
-          {/* Eyebrow */}
+          {/* Eyebrow — gradient dot */}
           <motion.p
             variants={slideUp}
             className="inline-flex items-center gap-2 font-mono text-xs font-medium uppercase tracking-[0.15em] text-ink-light mb-5"
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-brand-purple" />
+            <span
+              className="w-1.5 h-1.5 rounded-full shrink-0"
+              style={{ background: 'var(--gradient-logo)' }}
+            />
             The People
           </motion.p>
 
-          {/* Title */}
+          {/* Headline — "Our" is gradient */}
           <motion.h1
             variants={slideUp}
             className={cn(
@@ -98,7 +102,9 @@ function TeamHeader() {
               'mb-5',
             )}
           >
-            Meet Our Team
+            Meet{' '}
+            <span className="text-gradient-logo">Our</span>
+            {' '}Team
           </motion.h1>
 
           {/* Subtext */}
@@ -111,19 +117,21 @@ function TeamHeader() {
             take the credit — everyone here is hands-on.
           </motion.p>
 
-          {/* Member count pill */}
+          {/* Member count pill — gradient border */}
           <motion.div variants={slideUp}>
-            <div className={cn(
-              'inline-flex items-center gap-2.5',
-              'px-4 py-2 rounded-xl',
-              'bg-white border border-surface-200',
-              'shadow-card',
-            )}>
+            <div
+              className="inline-flex items-center gap-2.5 px-4 py-2 rounded-xl bg-white shadow-card"
+              style={{
+                border: '1px solid transparent',
+                backgroundClip: 'padding-box',
+                boxShadow: '0 1px 3px rgba(13,13,18,0.05), 0 4px 16px rgba(13,13,18,0.05), inset 0 0 0 1px rgba(142,86,42,0.18)',
+              }}
+            >
               <div className="flex -space-x-1.5">
                 {[
-                  { initials: 'AK', color: '#4A7FD4', bg: 'rgba(74,127,212,0.15)'  },
-                  { initials: 'PN', color: '#3A7A3A', bg: 'rgba(58,122,58,0.15)'   },
-                  { initials: 'MR', color: '#6B4A9B', bg: 'rgba(107,74,155,0.15)' },
+                  { initials: 'AK', color: '#3A6B2A', bg: 'rgba(58,107,42,0.14)'  },
+                  { initials: 'PN', color: '#8B5518', bg: 'rgba(139,85,24,0.14)'  },
+                  { initials: 'MR', color: '#AE3820', bg: 'rgba(174,56,32,0.14)'  },
                 ].map(({ initials, color, bg }) => (
                   <div
                     key={initials}
@@ -147,16 +155,27 @@ function TeamHeader() {
   )
 }
 
-/* ─── Hiring strip — solid bg, no gradient ──────────────────── */
+/* ─── Hiring strip ───────────────────────────────────────────── */
 function HiringStrip() {
   return (
-    <section className="py-14 bg-white border-t border-surface-200 border-b">
-      <div className="max-w-7xl mx-auto px-5 sm:px-6 md:px-10 lg:px-16 xl:px-24">
+    <section className="relative py-14 bg-white border-t border-b border-surface-200 overflow-hidden">
+
+      {/* Subtle gradient wash across the strip */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            'linear-gradient(90deg, rgba(58,107,42,0.04) 0%, rgba(139,85,24,0.03) 50%, rgba(174,56,32,0.04) 100%)',
+        }}
+      />
+
+      <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-6 md:px-10 lg:px-16 xl:px-24">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-60px' }}
-          transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
+          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
           className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6"
         >
           <div className="max-w-md">
@@ -164,7 +183,8 @@ function HiringStrip() {
               We're growing
             </p>
             <h2 className="font-display font-bold text-xl sm:text-2xl text-ink tracking-[-0.022em] leading-snug mb-2">
-              Want to join the team?
+              Want to{' '}
+              <span className="text-gradient-logo">join the team?</span>
             </h2>
             <p className="text-sm text-ink-muted leading-relaxed">
               We hire carefully and deliberately. If you're exceptional at what you do
@@ -181,16 +201,12 @@ function HiringStrip() {
                 'text-sm font-medium font-body text-white',
                 'bg-ink hover:bg-ink/85',
                 'transition-colors duration-150',
-                'shadow-lift hover:shadow-lift-hover',
-                'whitespace-nowrap',
+                'shadow-lift hover:shadow-lift-hover whitespace-nowrap',
               )}
             >
               View open roles
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-                <path d="M2 6h8M6 2.5l3.5 3.5L6 9.5"
-                  stroke="currentColor" strokeWidth="1.4"
-                  strokeLinecap="round" strokeLinejoin="round"
-                />
+                <path d="M2 6h8M6 2.5l3.5 3.5L6 9.5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </a>
             <a
@@ -201,8 +217,7 @@ function HiringStrip() {
                 'text-sm font-medium font-body text-ink-muted',
                 'bg-surface-100 border border-surface-200',
                 'hover:text-ink hover:border-surface-300',
-                'transition-colors duration-150',
-                'whitespace-nowrap',
+                'transition-colors duration-150 whitespace-nowrap',
               )}
             >
               Send a speculative CV
