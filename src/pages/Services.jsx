@@ -216,12 +216,7 @@ function ServicesIntro() {
           >
             Services built for{' '}
             <span
-              style={{
-                background: 'var(--gradient-logo)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-              }}
+              className="text-gradient-logo"
             >
               ambitious teams.
             </span>

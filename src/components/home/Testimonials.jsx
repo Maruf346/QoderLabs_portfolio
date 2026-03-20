@@ -116,12 +116,7 @@ export default function Testimonials() {
           >
             Trusted by{' '}
             <span
-              style={{
-                background: 'var(--gradient-logo)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-              }}
+              className="text-gradient-logo"
             >
               builders
             </span>
@@ -158,12 +153,7 @@ export default function Testimonials() {
             <div key={label} className="flex items-center gap-2">
               <span
                 className="font-display font-bold text-xl"
-                style={{
-                  background: 'var(--gradient-logo)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                }}
+                className="text-gradient-logo"
               >
                 {value}
               </span>

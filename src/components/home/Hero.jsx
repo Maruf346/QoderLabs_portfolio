@@ -190,22 +190,12 @@ export default function Hero() {
             )}
           >
             From{' '}
-            <span style={{
-              background:             'var(--gradient-logo)',
-              WebkitBackgroundClip:   'text',
-              WebkitTextFillColor:    'transparent',
-              backgroundClip:         'text',
-            }}>
+            <span className="text-gradient-logo">
               Concept
             </span>
             <br />
             to{' '}
-            <span style={{
-              background:             'var(--gradient-name)',
-              WebkitBackgroundClip:   'text',
-              WebkitTextFillColor:    'transparent',
-              backgroundClip:         'text',
-            }}>
+            <span className="text-gradient-name">
               Creation.
             </span>
           </motion.h1>

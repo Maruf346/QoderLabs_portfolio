@@ -30,10 +30,81 @@
   --brand-purple: #6B4A9B;
   --brand-pink:   #C45A7A;
 
-  /* Gradients */
-  --gradient-name: linear-gradient(90deg,  #3A7A3A 0%, #7A8B2E 25%, #B8832A 50%, #C4622D 75%, #C13B2A 100%);
-  --gradient-logo: linear-gradient(135deg, #C13B2A 0%, #C4622D 15%, #B8832A 30%, #7A8B2E 45%, #3A7A3A 55%, #2A6B5A 65%, #4A7FD4 80%, #6B4A9B 100%);
-  --gradient-soft: linear-gradient(135deg, rgba(193,59,42,0.06) 0%, rgba(184,131,42,0.04) 35%, rgba(58,122,58,0.05) 55%, rgba(74,127,212,0.06) 80%, rgba(107,74,155,0.05) 100%);
+  /* ── Gradients — glossy, logo-accurate ────────────────────
+   *
+   * Colour journey extracted from the logo photograph:
+   *   Hot spot (gloss) → red → orange → cream highlight →
+   *   amber → vivid green → teal shadow → blue → deep purple → pink bleed
+   *
+   * Key to the glossy look:
+   *   1. The creamy #F2C860 stop at ~18% = the specular highlight
+   *   2. Colours before and after it are highly saturated
+   *   3. The deep #3A1A78 stop = shadow where the two arms meet
+   *   4. Direction 130deg matches logo's top-left light source
+   * ─────────────────────────────────────────────────────── */
+
+  /* --gradient-logo now uses the name.png earth-tone palette
+   * so every text-gradient-logo element matches name.png exactly.
+   * Q=#3A6B2A → olive → khaki → burnt orange → brick → crimson */
+  --gradient-logo: linear-gradient(
+    90deg,
+    #3A6B2A  0%,
+    #4A7A2A 12%,
+    #6B6218 28%,
+    #8B5518 44%,
+    #9E481A 58%,
+    #AE3820 72%,
+    #98261E 86%,
+    #8A1E16 100%
+  );
+
+  /* Radial version — for orb/pill elements */
+  --gradient-logo-radial: radial-gradient(
+    ellipse 120% 120% at 65% 20%,
+    #F0C860  0%,
+    #E05838 12%,
+    #38A858 30%,
+    #1A5C40 48%,
+    #4A92E0 65%,
+    #3A1A78 82%,
+    #C04878 100%
+  );
+
+  /* Compressed — for small UI elements, buttons, badges */
+  --gradient-glossy: linear-gradient(
+    130deg,
+    #E05838  0%,
+    #F0C060 22%,
+    #38A858 44%,
+    #4A92E0 70%,
+    #8A3A90 100%
+  );
+
+  /* Name wordmark — pixel-sampled from name.png
+   * Q=#3A6B2A → O=#4A7A2A → D=#6B6218 → E=#8B5518
+   * → R=#9E481A → L=#AE3820 → A=#98261E → S=#8A1E16
+   * Pure earth tones, strictly left-to-right */
+  --gradient-name: linear-gradient(
+    90deg,
+    #3A6B2A  0%,
+    #4A7A2A 12%,
+    #6B6218 28%,
+    #8B5518 44%,
+    #9E481A 58%,
+    #AE3820 72%,
+    #98261E 86%,
+    #8A1E16 100%
+  );
+
+  /* Very diluted — section backgrounds only */
+  --gradient-soft: linear-gradient(
+    135deg,
+    rgba(212,64,48,  0.05)  0%,
+    rgba(242,200,96, 0.04) 20%,
+    rgba(56,176,96,  0.04) 45%,
+    rgba(74,154,232, 0.05) 70%,
+    rgba(58,26,120,  0.04) 100%
+  );
 
   /* Shadows — refined, layered */
   --shadow-xs:         0 1px 2px rgba(13,13,18,0.05);
@@ -202,20 +273,30 @@
   .body-lg { @apply text-base md:text-lg text-[#56566E] leading-relaxed; }
   .body-sm { @apply text-sm text-[#56566E] leading-relaxed; }
 
-  /* ── Gradient text ───────────────────────────────────────── */
+  /* ── Gradient text ───────────────────────────────────────────
+   * !important on -webkit-text-fill-color is required.
+   * Without it, a parent Tailwind color class (e.g. text-ink)
+   * overrides fill-color in the cascade, leaving text black.
+   * background-size:100% ensures full gradient range shows
+   * even on short single-word spans.
+   * ─────────────────────────────────────────────────────────── */
   .text-gradient,
   .text-gradient-logo {
-    background:             var(--gradient-logo);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip:         text;
+    background:              var(--gradient-logo);
+    background-size:         100%;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip:         text !important;
+    color:                   transparent !important;
   }
 
   .text-gradient-name {
-    background:             var(--gradient-name);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip:         text;
+    background:              var(--gradient-name);
+    background-size:         100%;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip:         text !important;
+    color:                   transparent !important;
   }
 
   /* ── Glass ───────────────────────────────────────────────── */

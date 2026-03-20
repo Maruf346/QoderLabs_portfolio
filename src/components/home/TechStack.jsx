@@ -92,12 +92,7 @@ export default function TechStack() {
           >
             Built with the{' '}
             <span
-              style={{
-                background: 'var(--gradient-logo)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-              }}
+              className="text-gradient-logo"
             >
               right tools
             </span>

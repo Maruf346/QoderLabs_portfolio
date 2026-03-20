@@ -65,12 +65,7 @@ export default function PortfolioHeader({ activeCategory, onCategoryChange }) {
           >
             Products we're{' '}
             <span
-              style={{
-                background: 'var(--gradient-logo)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-              }}
+              className="text-gradient-logo"
             >
               proud of.
             </span>

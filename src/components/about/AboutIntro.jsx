@@ -87,12 +87,7 @@ export default function AboutIntro() {
           >
             We build software{' '}
             <span
-              style={{
-                background: 'var(--gradient-logo)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-              }}
+              className="text-gradient-logo"
             >
               that matters.
             </span>

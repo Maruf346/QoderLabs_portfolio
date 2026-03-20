@@ -104,12 +104,7 @@ export default function Stats() {
           >
             The work speaks{' '}
             <span
-              style={{
-                background: 'var(--gradient-logo)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-              }}
+              className="text-gradient-logo"
             >
               for itself.
             </span>
@@ -188,23 +183,13 @@ function StatCard({ stat, index }) {
       <div className="flex items-baseline gap-0.5">
         <motion.span
           className="font-display font-bold text-4xl leading-none tracking-[-0.04em]"
-          style={{
-            background: 'var(--gradient-logo)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text',
-          }}
+          className="text-gradient-logo"
         >
           {rounded}
         </motion.span>
         <span
           className="font-display font-bold text-2xl leading-none"
-          style={{
-            background: 'var(--gradient-logo)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text',
-          }}
+          className="text-gradient-logo"
         >
           {suffix}
         </span>

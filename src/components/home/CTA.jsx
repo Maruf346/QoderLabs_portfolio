@@ -150,12 +150,7 @@ export default function CTA() {
           >
             Have an idea?{' '}
             <br className="hidden sm:block" />
-            <span style={{
-              background:           'var(--gradient-logo)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor:  'transparent',
-              backgroundClip:       'text',
-            }}>
+            <span className="text-gradient-logo">
               Let's build it.
             </span>
           </motion.h2>

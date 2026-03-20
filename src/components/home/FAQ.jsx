@@ -93,12 +93,7 @@ export default function FAQ() {
             >
               Questions?{' '}
               <span
-                style={{
-                  background: 'var(--gradient-logo)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                }}
+                className="text-gradient-logo"
               >
                 Answered.
               </span>

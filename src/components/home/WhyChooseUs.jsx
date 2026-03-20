@@ -119,12 +119,7 @@ export default function WhyChooseUs() {
               <br className="hidden md:block" />
               we{' '}
               <span
-                style={{
-                  background: 'var(--gradient-name)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text',
-                }}
+                className="text-gradient-name"
               >
                 engineer outcomes.
               </span>
@@ -153,12 +148,7 @@ export default function WhyChooseUs() {
                   {/* Stat value */}
                   <span
                     className="font-display font-bold text-3xl sm:text-4xl leading-none tracking-[-0.04em]"
-                    style={{
-                      background: 'var(--gradient-logo)',
-                      WebkitBackgroundClip: 'text',
-                      WebkitTextFillColor: 'transparent',
-                      backgroundClip: 'text',
-                    }}
+                    className="text-gradient-logo"
                   >
                     {stat.value}
                   </span>
