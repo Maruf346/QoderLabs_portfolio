@@ -152,8 +152,7 @@ export default function Testimonials() {
           ].map(({ value, label }) => (
             <div key={label} className="flex items-center gap-2">
               <span
-                className="font-display font-bold text-xl"
-                className="text-gradient-logo"
+                className="font-display font-bold text-xl text-gradient-logo"
               >
                 {value}
               </span>

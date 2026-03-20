@@ -28,9 +28,6 @@ export default function JobCard({ job, index = 0, onApply }) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-40px' }}
       transition={{ duration: 0.50, delay: index * 0.07, ease: [0.16, 1, 0.3, 1] }}
-      initial="rest"
-      whileHover="hover"
-      animate="rest"
       className="group relative"
     >
       {/* Solid left accent — spring scale */}

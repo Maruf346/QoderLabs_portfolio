@@ -147,8 +147,7 @@ export default function WhyChooseUs() {
                 >
                   {/* Stat value */}
                   <span
-                    className="font-display font-bold text-3xl sm:text-4xl leading-none tracking-[-0.04em]"
-                    className="text-gradient-logo"
+                    className="font-display font-bold text-3xl sm:text-4xl leading-none tracking-[-0.04em] text-gradient-logo"
                   >
                     {stat.value}
                   </span>

@@ -182,14 +182,12 @@ function StatCard({ stat, index }) {
       {/* Animated number */}
       <div className="flex items-baseline gap-0.5">
         <motion.span
-          className="font-display font-bold text-4xl leading-none tracking-[-0.04em]"
-          className="text-gradient-logo"
+          className="font-display font-bold text-4xl leading-none tracking-[-0.04em] text-gradient-logo"
         >
           {rounded}
         </motion.span>
         <span
-          className="font-display font-bold text-2xl leading-none"
-          className="text-gradient-logo"
+          className="font-display font-bold text-2xl leading-none text-gradient-logo"
         >
           {suffix}
         </span>
